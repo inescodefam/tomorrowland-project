@@ -10,7 +10,6 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,7 +25,7 @@ class PayPalIntegrationTest {
 
     @Test
     void shouldCompleteSandboxFlowWithWireMock() {
-        stubFor(post(urlEqualTo("/v2/checkout/orders"))
+        wireMock.stubFor(post(urlEqualTo("/v2/checkout/orders"))
                 .willReturn(aResponse().withStatus(201).withBody("{\"id\":\"ORDER-123\",\"status\":\"APPROVED\"}")));
 
         String result = paymentService.createPaypalOrder(1L);

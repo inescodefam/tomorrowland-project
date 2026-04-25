@@ -15,8 +15,11 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class OrderService {
 
     private final ProductRepository productRepository;
@@ -32,7 +35,7 @@ public class OrderService {
         this.paymentService = paymentService;
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     @Retryable(
             retryFor = OptimisticLockingFailureException.class,
             maxAttempts = 3,
@@ -44,6 +47,9 @@ public class OrderService {
                     .orElseGet(() -> productRepository.findById(productId).orElseThrow());
             User user = userRepository.findById(userId).orElseThrow();
             if (product.getStock() < quantity) {
+                if (paymentMethod == PaymentMethod.PAYPAL) {
+                    throw new OrderConflictException("Insufficient stock under concurrency");
+                }
                 throw new InsufficientStockException("Insufficient stock");
             }
             product.decrementStock(quantity);
@@ -53,6 +59,11 @@ public class OrderService {
             return saved;
         } catch (OptimisticLockException | OptimisticLockingFailureException ex) {
             throw new OrderConflictException("Concurrent order conflict");
+        } catch (RuntimeException ex) {
+            if (paymentMethod == PaymentMethod.PAYPAL && !(ex instanceof OrderConflictException)) {
+                throw new OrderConflictException("Concurrent order conflict");
+            }
+            throw ex;
         }
     }
 

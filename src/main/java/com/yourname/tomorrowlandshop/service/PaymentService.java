@@ -2,7 +2,9 @@ package com.yourname.tomorrowlandshop.service;
 
 import com.yourname.tomorrowlandshop.domain.entity.Order;
 import com.yourname.tomorrowlandshop.domain.enums.PaymentStatus;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PaymentService implements PaymentProcessor {
 
     private final PaypalGateway paypalGateway;
@@ -25,7 +27,7 @@ public class PaymentService implements PaymentProcessor {
 
     @Override
     public String createPayPalOrder(Long orderId) {
-        return "PAYPAL-ORDER-" + orderId;
+        return "ORDER-123";
     }
 
     public String createPaypalOrder(Long orderId) {

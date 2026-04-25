@@ -3,9 +3,11 @@ package com.yourname.tomorrowlandshop.service;
 import com.yourname.tomorrowlandshop.domain.entity.Cart;
 import com.yourname.tomorrowlandshop.domain.entity.Product;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
+@Service
 public class CartService {
 
     public void add(HttpSession session, Product product, int quantity) {

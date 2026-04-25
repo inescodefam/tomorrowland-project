@@ -3,9 +3,11 @@ package com.yourname.tomorrowlandshop.service;
 import com.yourname.tomorrowlandshop.domain.entity.Product;
 import com.yourname.tomorrowlandshop.domain.exception.NotFoundException;
 import com.yourname.tomorrowlandshop.repository.ProductRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class ProductService {
 
     private final ProductRepository productRepository;
