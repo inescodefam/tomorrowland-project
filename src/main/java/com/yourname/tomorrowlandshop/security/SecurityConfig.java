@@ -1,0 +1,48 @@
+package com.yourname.tomorrowlandshop.security;
+
+import com.yourname.tomorrowlandshop.repository.LoginAuditRepository;
+import com.yourname.tomorrowlandshop.service.JwtService;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+public class SecurityConfig {
+
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter,
+                                            LoginAuditFilter loginAuditFilter) throws Exception {
+        http.csrf(csrf -> csrf.disable());
+        http.exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {
+            response.setStatus(401);
+        }));
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.GET, "/products/**", "/categories/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/orders/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/orders/history").authenticated()
+                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/**").authenticated()
+                .anyRequest().permitAll());
+        http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
+        http.formLogin(Customizer.withDefaults());
+        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(loginAuditFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
+    JwtAuthFilter jwtAuthFilter(ObjectProvider<JwtService> jwtServiceProvider) {
+        return new JwtAuthFilter(jwtServiceProvider.getIfAvailable());
+    }
+
+    @Bean
+    LoginAuditFilter loginAuditFilter(ObjectProvider<LoginAuditRepository> loginAuditRepositoryProvider) {
+        return new LoginAuditFilter(loginAuditRepositoryProvider.getIfAvailable());
+    }
+}

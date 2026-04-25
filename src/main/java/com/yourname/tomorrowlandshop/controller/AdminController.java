@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin")
 public class AdminController {
 
+    @GetMapping("/products")
+    public ResponseEntity<Void> listProducts() { return ResponseEntity.ok().build(); }
+
     @PostMapping("/products")
     public ResponseEntity<Void> createProduct() { return ResponseEntity.ok().build(); }
 
