@@ -1,0 +1,24 @@
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ / IDE
+.idea/
+*.iml
+!.idea/.gitignore
+
+# OS / temp
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# Env / secrets
+.env
+.env.*
+application-local.properties
+application-*.local.properties
+*.key
+*.pem
+*.p12
+*.jks
