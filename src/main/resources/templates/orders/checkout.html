@@ -33,11 +33,11 @@
 </main>
 <script src="https://www.paypal.com/sdk/js?client-id=test&currency=EUR"></script>
 <script>
-    if (window.paypal) {
+    if (globalThis.paypal) {
       paypal.Buttons({
         createOrder: async () => "DUMMY_ORDER_ID",
-        onApprove: () => window.location.href = "/orders/paypal/success",
-        onCancel: () => window.location.href = "/orders/paypal/cancel"
+        onApprove: () => globalThis.location.href = "/orders/paypal/success",
+        onCancel: () => globalThis.location.href = "/orders/paypal/cancel"
       }).render('#paypal-button-container');
     }
 </script>

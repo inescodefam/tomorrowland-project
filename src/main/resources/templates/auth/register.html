@@ -11,16 +11,16 @@
     <h1 class="h3 mb-3">Create Account</h1>
     <form method="post" th:action="@{/register}">
         <div class="mb-3">
-            <label class="form-label">Username</label>
-            <input class="form-control" type="text" name="username" required>
+            <label class="form-label" for="register-username">Username</label>
+            <input id="register-username" class="form-control" type="text" name="username" required>
         </div>
         <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input class="form-control" type="email" name="email" required>
+            <label class="form-label" for="register-email">Email</label>
+            <input id="register-email" class="form-control" type="email" name="email" required>
         </div>
         <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input class="form-control" type="password" name="password" required>
+            <label class="form-label" for="register-password">Password</label>
+            <input id="register-password" class="form-control" type="password" name="password" required>
         </div>
         <button class="btn btn-success w-100">Register</button>
     </form>

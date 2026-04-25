@@ -21,7 +21,8 @@
                     <a class="nav-link" th:href="@{/orders/history}">My Orders</a>
                 </li>
                 <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Admin</a>
+                    <button class="nav-link dropdown-toggle btn btn-link text-decoration-none" type="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">Admin</button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" th:href="@{/admin/products}">Products</a></li>
                         <li><a class="dropdown-item" th:href="@{/admin/categories}">Categories</a></li>
