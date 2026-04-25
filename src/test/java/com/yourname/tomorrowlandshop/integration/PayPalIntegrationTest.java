@@ -28,7 +28,7 @@ class PayPalIntegrationTest {
         wireMock.stubFor(post(urlEqualTo("/v2/checkout/orders"))
                 .willReturn(aResponse().withStatus(201).withBody("{\"id\":\"ORDER-123\",\"status\":\"APPROVED\"}")));
 
-        String result = paymentService.createPaypalOrder(1L);
+        String result = paymentService.createPayPalOrder(1L);
 
         assertThat(result).contains("ORDER-123");
     }

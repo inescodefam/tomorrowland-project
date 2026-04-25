@@ -30,7 +30,7 @@ public class PaymentService implements PaymentProcessor {
         return "ORDER-123";
     }
 
-    public String createPaypalOrder(Long orderId) {
+    public String createPaypalOrderLegacy(Long orderId) {
         return createPayPalOrder(orderId);
     }
 
