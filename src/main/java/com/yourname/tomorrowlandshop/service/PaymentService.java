@@ -3,7 +3,7 @@ package com.yourname.tomorrowlandshop.service;
 import com.yourname.tomorrowlandshop.domain.entity.Order;
 import com.yourname.tomorrowlandshop.domain.enums.PaymentStatus;
 
-public class PaymentService {
+public class PaymentService implements PaymentProcessor {
 
     private final PaypalGateway paypalGateway;
 
@@ -11,6 +11,7 @@ public class PaymentService {
         this.paypalGateway = paypalGateway;
     }
 
+    @Override
     public PaymentStatus initiatePayment(Order order) {
         String result = paypalGateway.createPayment(order);
         if ("APPROVED".equals(result)) {
@@ -22,7 +23,24 @@ public class PaymentService {
         return PaymentStatus.CANCELED;
     }
 
+    @Override
+    public String createPayPalOrder(Long orderId) {
+        return "PAYPAL-ORDER-" + orderId;
+    }
+
     public String createPaypalOrder(Long orderId) {
-        return "ORDER-" + orderId;
+        return createPayPalOrder(orderId);
+    }
+
+    @Override
+    public PaymentStatus capturePayPalOrder(String paypalOrderId) {
+        return paypalOrderId != null && !paypalOrderId.isBlank()
+                ? PaymentStatus.SUCCESS
+                : PaymentStatus.FAILED;
+    }
+
+    @Override
+    public PaymentStatus processCashOnDelivery(Order order) {
+        return order != null ? PaymentStatus.SUCCESS : PaymentStatus.FAILED;
     }
 }
