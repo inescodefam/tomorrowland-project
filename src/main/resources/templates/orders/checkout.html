@@ -20,18 +20,18 @@
     </section>
     <div th:if="${checkoutError}" class="alert alert-warning" th:text="${checkoutError}"></div>
     <div class="row g-4">
-        <div class="col-lg-7">
-            <h5 class="mb-3">Order summary</h5>
-            <ul class="list-group mb-3">
-                <li class="list-group-item d-flex justify-content-between" th:each="item : ${cart.items}">
+        <div class="col-lg-7 checkout-summary">
+            <h5 class="mb-3 checkout-summary-title">Order summary</h5>
+            <ul class="list-group mb-3 checkout-summary-list">
+                <li class="list-group-item d-flex justify-content-between checkout-summary-item" th:each="item : ${cart.items}">
                     <span th:text="|${item.productName} × ${item.quantity}|">Item</span>
                     <span th:text="${#numbers.formatDecimal(item.lineTotal, 1, 'COMMA', 2, 'POINT')}">0</span>
                 </li>
             </ul>
-            <p class="h5">Total: <span th:text="${#numbers.formatDecimal(total, 1, 'COMMA', 2, 'POINT')}">0.00</span> EUR</p>
+            <p class="h5 checkout-summary-total">Total: <span th:text="${#numbers.formatDecimal(total, 1, 'COMMA', 2, 'POINT')}">0.00</span> EUR</p>
         </div>
         <div class="col-lg-5">
-            <div class="card">
+            <div class="card checkout-payment-card">
                 <div class="card-body">
                     <h5 class="card-title">Payment</h5>
                     <form method="post" th:action="@{/orders/checkout}" class="d-grid gap-2">

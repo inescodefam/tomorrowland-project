@@ -14,18 +14,18 @@
         <h1 class="text-success">Order confirmed</h1>
         <p class="lead">Thank you — order <strong th:text="${order != null ? '#' + order.id : ''}">#123</strong> is complete.</p>
     </div>
-    <div class="card mx-auto" style="max-width: 560px;" th:if="${order != null}">
-        <div class="card-body">
+    <div class="card mx-auto confirmation-summary-card" style="max-width: 560px;" th:if="${order != null}">
+        <div class="card-body confirmation-summary-body">
             <h5 class="card-title">Summary</h5>
-            <ul class="list-group list-group-flush mb-3">
-                <li class="list-group-item d-flex justify-content-between" th:each="line : ${order.orderItems}">
+            <ul class="list-group list-group-flush mb-3 confirmation-summary-list">
+                <li class="list-group-item d-flex justify-content-between confirmation-summary-item" th:each="line : ${order.orderItems}">
                     <span th:text="|${line.productName} × ${line.quantity}|">item</span>
                     <span th:text="${#numbers.formatDecimal(line.lineTotal, 1, 'COMMA', 2, 'POINT')}">0</span>
                 </li>
             </ul>
             <p class="mb-1"><strong>Total:</strong> <span th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 2, 'POINT')}">0</span> EUR</p>
             <p class="mb-1"><strong>Payment:</strong> <span th:text="${order.paymentMethod}">COD</span></p>
-            <p class="mb-0"><strong>Status:</strong> <span class="badge bg-secondary" th:text="${order.status}">PAID</span></p>
+            <p class="mb-0"><strong>Status:</strong> <span class="badge tml-status-badge" th:text="${order.status}">PAID</span></p>
         </div>
     </div>
     <div class="text-center mt-4">

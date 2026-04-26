@@ -31,3 +31,14 @@
 .tml-table .form-control, .tml-table .form-select { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); color: #fff; }
 .tml-table .form-control:focus, .tml-table .form-select:focus { background: rgba(255,255,255,.14); border-color: #d38dff; box-shadow: 0 0 0 .2rem rgba(211,141,255,.22); color: #fff; }
 .tml-status-badge { background: linear-gradient(135deg, rgba(125,44,255,.92), rgba(211,66,141,.92)) !important; color: #fff; }
+
+.checkout-summary-title, .checkout-summary-total { color: #f8f9fa; text-shadow: 0 2px 10px rgba(0,0,0,.35); }
+.checkout-summary-list { border: 1px solid rgba(255,255,255,.14); border-radius: .9rem; overflow: hidden; }
+.checkout-summary-item { background: linear-gradient(145deg, rgba(52,29,89,.46), rgba(25,18,52,.62)); color: #f8f9fa; border-color: rgba(255,255,255,.12); }
+.checkout-summary-item + .checkout-summary-item { border-top-color: rgba(255,255,255,.12); }
+.checkout-payment-card { border: 1px solid rgba(255,255,255,.16); background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(248,244,255,.96)); box-shadow: 0 .45rem 1rem rgba(0,0,0,.25); }
+
+.confirmation-summary-card { border: 1px solid rgba(255,255,255,.16); background: linear-gradient(145deg, rgba(52,29,89,.62), rgba(25,18,52,.76)); box-shadow: 0 .45rem 1rem rgba(0,0,0,.28); }
+.confirmation-summary-body { color: #f8f9fa; }
+.confirmation-summary-list { border: 1px solid rgba(255,255,255,.14); border-radius: .9rem; overflow: hidden; }
+.confirmation-summary-item { background: linear-gradient(145deg, rgba(52,29,89,.46), rgba(25,18,52,.62)); color: #f8f9fa; border-color: rgba(255,255,255,.12); }
