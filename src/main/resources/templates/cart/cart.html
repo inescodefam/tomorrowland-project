@@ -60,7 +60,10 @@
     </div>
     <div class="mt-4" th:unless="${#lists.isEmpty(cart.items)}">
         <a class="btn btn-primary" sec:authorize="hasRole('USER')" th:href="@{/orders/checkout}">Proceed to Checkout</a>
-        <a class="btn btn-primary" sec:authorize="!hasRole('USER')" th:href="@{/login}">Login to checkout</a>
+        <a class="btn btn-primary" sec:authorize="isAnonymous()" th:href="@{/login}">Login to checkout</a>
+        <div class="alert alert-info mb-0" sec:authorize="hasRole('ADMIN')">
+            This cart is only for preview purposes.
+        </div>
     </div>
     </div>
 </main>

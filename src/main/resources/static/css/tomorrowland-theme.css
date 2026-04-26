@@ -57,12 +57,21 @@
     background: linear-gradient(135deg, rgba(35, 22, 72, 0.55), rgba(13, 10, 31, 0.78));
 }
 
+.ticket-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(8, 6, 16, 0.15) 20%, rgba(8, 6, 16, 0.62) 62%, rgba(8, 6, 16, 0.9) 100%);
+    z-index: 1;
+}
+
 .ticket-media img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: 0;
 }
 
 .ticket-card .card-title {
@@ -76,4 +85,9 @@
 
 .ticket-stock {
     color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.ticket-media .card-body {
+    z-index: 2;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
 }
