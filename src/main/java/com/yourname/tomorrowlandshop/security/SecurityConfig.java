@@ -23,6 +23,10 @@ import java.io.IOException;
 @Configuration
 public class SecurityConfig {
 
+    private static final String PRODUCTS_PATH = "/products";
+    private static final String API_PATH = "/api";
+    private static final String ADMIN_PATH = "/admin";
+
     @Bean
     DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService,
                                                         PasswordEncoder passwordEncoder) {
@@ -38,7 +42,7 @@ public class SecurityConfig {
 
     private static void redirectToProducts(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String ctx = request.getContextPath();
-        response.sendRedirect(ctx + "/products");
+        response.sendRedirect(ctx + PRODUCTS_PATH);
     }
 
     @Bean
@@ -53,11 +57,11 @@ public class SecurityConfig {
                 .authenticationEntryPoint((request, response, authException) -> {
                     String path = request.getRequestURI();
                     String ctx = request.getContextPath();
-                    if (path.startsWith(ctx + "/api")) {
+                    if (path.startsWith(ctx + API_PATH)) {
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         return;
                     }
-                    if (path.startsWith(ctx + "/admin")) {
+                    if (path.startsWith(ctx + ADMIN_PATH)) {
                         redirectToProducts(request, response);
                         return;
                     }
@@ -66,11 +70,11 @@ public class SecurityConfig {
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                     String path = request.getRequestURI();
                     String ctx = request.getContextPath();
-                    if (path.startsWith(ctx + "/api")) {
+                    if (path.startsWith(ctx + API_PATH)) {
                         sendApiForbidden(response);
                         return;
                     }
-                    if (path.startsWith(ctx + "/admin")) {
+                    if (path.startsWith(ctx + ADMIN_PATH)) {
                         redirectToProducts(request, response);
                         return;
                     }
@@ -92,8 +96,8 @@ public class SecurityConfig {
         http.formLogin(form -> form
                 .loginPage("/login")
                 .permitAll()
-                .defaultSuccessUrl("/products", true));
-        http.logout(logout -> logout.logoutSuccessUrl("/products").permitAll());
+                .defaultSuccessUrl(PRODUCTS_PATH, true));
+        http.logout(logout -> logout.logoutSuccessUrl(PRODUCTS_PATH).permitAll());
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(loginAuditFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

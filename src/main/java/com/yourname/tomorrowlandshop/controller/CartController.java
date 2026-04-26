@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/cart")
 public class CartController {
 
+    private static final String REDIRECT_CART = "redirect:/cart";
+
     private final CartService cartService;
 
     public CartController(CartService cartService) {
@@ -24,7 +26,7 @@ public class CartController {
     @PostMapping("/add")
     public String add(@RequestParam Long productId, @RequestParam(defaultValue = "1") int quantity, HttpSession session) {
         cartService.addItem(session, productId, quantity);
-        return "redirect:/cart";
+        return REDIRECT_CART;
     }
 
     @GetMapping
@@ -38,18 +40,18 @@ public class CartController {
     @PutMapping("/update")
     public String update(@RequestParam Long productId, @RequestParam int quantity, HttpSession session) {
         cartService.updateQuantity(session, productId, quantity);
-        return "redirect:/cart";
+        return REDIRECT_CART;
     }
 
     @DeleteMapping("/remove")
     public String remove(@RequestParam Long productId, HttpSession session) {
         cartService.removeItem(session, productId);
-        return "redirect:/cart";
+        return REDIRECT_CART;
     }
 
     @DeleteMapping("/clear")
     public String clear(HttpSession session) {
         cartService.clearCart(session);
-        return "redirect:/cart";
+        return REDIRECT_CART;
     }
 }

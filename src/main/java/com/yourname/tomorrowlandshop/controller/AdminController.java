@@ -19,6 +19,10 @@ import java.time.LocalDateTime;
 @RequestMapping("/admin")
 public class AdminController {
 
+    private static final String CATEGORIES_MODEL_ATTRIBUTE = "categories";
+    private static final String REDIRECT_ADMIN_PRODUCTS = "redirect:/admin/products";
+    private static final String REDIRECT_ADMIN_CATEGORIES = "redirect:/admin/categories";
+
     private final AdminService adminService;
 
     public AdminController(AdminService adminService) {
@@ -28,51 +32,51 @@ public class AdminController {
     @GetMapping("/products")
     public String listProducts(Model model) {
         model.addAttribute("products", adminService.getAllProducts());
-        model.addAttribute("categories", adminService.getAllCategories());
+        model.addAttribute(CATEGORIES_MODEL_ATTRIBUTE, adminService.getAllCategories());
         return "admin/products";
     }
 
     @PostMapping("/products")
     public String createProduct(@ModelAttribute ProductDto dto) {
         adminService.createProduct(dto);
-        return "redirect:/admin/products";
+        return REDIRECT_ADMIN_PRODUCTS;
     }
 
     @GetMapping("/products/{id}/edit")
     public String editProduct(@PathVariable Long id, Model model) {
         model.addAttribute("product", adminService.getProduct(id));
-        model.addAttribute("categories", adminService.getAllCategories());
+        model.addAttribute(CATEGORIES_MODEL_ATTRIBUTE, adminService.getAllCategories());
         return "admin/products-edit";
     }
 
     @PostMapping("/products/{id}")
     public String updateProduct(@PathVariable Long id, @ModelAttribute ProductDto dto) {
         adminService.updateProduct(id, dto);
-        return "redirect:/admin/products";
+        return REDIRECT_ADMIN_PRODUCTS;
     }
 
     @PostMapping("/products/{id}/delete")
     public String deleteProduct(@PathVariable Long id) {
         adminService.deleteProduct(id);
-        return "redirect:/admin/products";
+        return REDIRECT_ADMIN_PRODUCTS;
     }
 
     @GetMapping("/categories")
     public String listCategories(Model model) {
-        model.addAttribute("categories", adminService.getAllCategories());
+        model.addAttribute(CATEGORIES_MODEL_ATTRIBUTE, adminService.getAllCategories());
         return "admin/categories";
     }
 
     @PostMapping("/categories")
     public String createCategory(@ModelAttribute CategoryDto dto) {
         adminService.createCategory(dto);
-        return "redirect:/admin/categories";
+        return REDIRECT_ADMIN_CATEGORIES;
     }
 
     @PostMapping("/categories/{id}/delete")
     public String deleteCategory(@PathVariable Long id) {
         adminService.deleteCategory(id);
-        return "redirect:/admin/categories";
+        return REDIRECT_ADMIN_CATEGORIES;
     }
 
     @GetMapping("/orders")

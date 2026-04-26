@@ -26,6 +26,12 @@ import java.math.BigDecimal;
 @RequestMapping("/orders")
 public class OrderController {
 
+    private static final String REDIRECT_CART = "redirect:/cart";
+    private static final String CHECKOUT_ERROR_ATTRIBUTE = "checkoutError";
+    private static final String PAYPAL_ORDER_ID_ATTRIBUTE = "paypalOrderId";
+    private static final String STOCK_UPDATED_MESSAGE =
+            "Items in your cart are no longer in stock. Your cart has been updated.";
+
     private final OrderService orderService;
     private final CartService cartService;
     private final PaymentService paymentService;
@@ -44,8 +50,8 @@ public class OrderController {
         cartService.reconcileCartWithStock(session);
         Cart cart = cartService.getCart(session);
         if (cart.isEmpty()) {
-            redirectAttributes.addFlashAttribute("checkoutError", "Your cart is empty");
-            return "redirect:/cart";
+            redirectAttributes.addFlashAttribute(CHECKOUT_ERROR_ATTRIBUTE, "Your cart is empty");
+            return REDIRECT_CART;
         }
         model.addAttribute("cart", cart);
         model.addAttribute("total", cartService.calculateTotal(session));
@@ -61,9 +67,8 @@ public class OrderController {
         cartService.reconcileCartWithStock(session);
         Cart cart = cartService.getCart(session);
         if (cart.isEmpty()) {
-            redirectAttributes.addFlashAttribute("checkoutError",
-                    "Items in your cart are no longer in stock. Your cart has been updated.");
-            return "redirect:/cart";
+            redirectAttributes.addFlashAttribute(CHECKOUT_ERROR_ATTRIBUTE, STOCK_UPDATED_MESSAGE);
+            return REDIRECT_CART;
         }
         if (paymentMethod == PaymentMethod.CASH_ON_DELIVERY) {
             Order order = orderService.placeOrder(user.getId(), cart, PaymentMethod.CASH_ON_DELIVERY);
@@ -72,7 +77,7 @@ public class OrderController {
         }
         BigDecimal total = cartService.calculateTotal(session);
         PayPalCheckoutStart start = paymentService.createPayPalCheckout(total);
-        session.setAttribute("paypalOrderId", start.paypalOrderId());
+        session.setAttribute(PAYPAL_ORDER_ID_ATTRIBUTE, start.paypalOrderId());
         return "redirect:" + start.approvalUrl();
     }
 
@@ -81,32 +86,31 @@ public class OrderController {
                                 HttpSession session,
                                 Authentication authentication,
                                 RedirectAttributes redirectAttributes) {
-        String expected = (String) session.getAttribute("paypalOrderId");
+        String expected = (String) session.getAttribute(PAYPAL_ORDER_ID_ATTRIBUTE);
         if (expected != null && !expected.equals(paypalOrderId)) {
-            return "redirect:/cart";
+            return REDIRECT_CART;
         }
         if (paymentService.capturePayPalOrder(paypalOrderId) != PaymentStatus.SUCCESS) {
-            return "redirect:/cart";
+            return REDIRECT_CART;
         }
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow();
         cartService.reconcileCartWithStock(session);
         Cart cart = cartService.getCart(session);
         if (cart.isEmpty()) {
-            redirectAttributes.addFlashAttribute("checkoutError",
-                    "Items in your cart are no longer in stock. Your cart has been updated.");
-            return "redirect:/cart";
+            redirectAttributes.addFlashAttribute(CHECKOUT_ERROR_ATTRIBUTE, STOCK_UPDATED_MESSAGE);
+            return REDIRECT_CART;
         }
         Order order = orderService.placeOrder(user.getId(), cart, PaymentMethod.PAYPAL);
         orderService.confirmPayment(order.getId(), paypalOrderId);
         cartService.clearCart(session);
-        session.removeAttribute("paypalOrderId");
+        session.removeAttribute(PAYPAL_ORDER_ID_ATTRIBUTE);
         return "redirect:/orders/confirmation?orderId=" + order.getId();
     }
 
     @GetMapping("/paypal/cancel")
     public String paypalCancel(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("paypalMessage", "PayPal payment cancelled");
-        return "redirect:/cart";
+        return REDIRECT_CART;
     }
 
     @GetMapping("/confirmation")
