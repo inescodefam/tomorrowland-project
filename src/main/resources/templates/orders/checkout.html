@@ -32,8 +32,9 @@
         </div>
     </div>
 </main>
-<!--/* PayPal sdk/js has no vendor SRI; use HTTPS, CSP, and a server-controlled client-id in production. */-->
-<script src="https://www.paypal.com/sdk/js?client-id=test&currency=EUR" crossorigin="anonymous"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=test&currency=EUR"
+        integrity="sha384-kGsGDjenmXidExqsi7RaiCRxhmtYFuqf9ytjZFNCp6gXmnRtjmYuzL1vwD4J9/W3"
+        crossorigin="anonymous"></script>
 <script>
     if (globalThis.paypal) {
       paypal.Buttons({
