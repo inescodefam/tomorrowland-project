@@ -8,19 +8,6 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<style>
-    .tml-nav-link {
-        transition: color .16s ease, text-shadow .16s ease;
-    }
-    .tml-nav-link:hover {
-        color: #ffffff !important;
-    }
-    .tml-nav-link.active {
-        color: #ffffff !important;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.22);
-        font-weight: 600;
-    }
-</style>
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm"
      style="background: linear-gradient(90deg, rgba(18,12,37,.96), rgba(45,18,72,.92), rgba(22,14,47,.96)); border-bottom: 1px solid rgba(255,255,255,.18);"
      th:fragment="navbar">
@@ -32,23 +19,16 @@
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white-50 tml-nav-link"
-                       th:href="@{/products}"
-                       th:classappend="${#strings.startsWith(#request.requestURI, '/products')} ? ' active' : ''">Products</a>
+                    <a class="nav-link text-white-50" th:href="@{/products}">Products</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white-50 tml-nav-link"
-                       th:href="@{/categories}"
-                       th:classappend="${#strings.startsWith(#request.requestURI, '/categories')} ? ' active' : ''">Categories</a>
+                    <a class="nav-link text-white-50" th:href="@{/categories}">Categories</a>
                 </li>
                 <li class="nav-item" sec:authorize="hasRole('USER')">
-                    <a class="nav-link text-white-50 tml-nav-link"
-                       th:href="@{/orders/history}"
-                       th:classappend="${#strings.startsWith(#request.requestURI, '/orders/history')} ? ' active' : ''">My Orders</a>
+                    <a class="nav-link text-white-50" th:href="@{/orders/history}">My Orders</a>
                 </li>
                 <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
-                    <button class="nav-link dropdown-toggle btn btn-link text-decoration-none text-white-50 tml-nav-link"
-                            th:classappend="${#strings.startsWith(#request.requestURI, '/admin')} ? ' active' : ''"
+                    <button class="nav-link dropdown-toggle btn btn-link text-decoration-none text-white-50"
                             type="button"
                             data-bs-toggle="dropdown" aria-expanded="false">Admin</button>
                     <ul class="dropdown-menu">
