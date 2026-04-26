@@ -20,28 +20,28 @@
     <div class="row g-3">
         <div class="col-md-4" th:each="product : ${products}">
             <div class="card h-100 ticket-card" th:attr="data-href=@{/products/{id}(id=${product.id})}">
-                <div class="ratio ratio-4x3 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center overflow-hidden">
+                <div class="ticket-media d-flex align-items-center justify-content-center">
                     <img th:if="${product.imageUrl != null and !#strings.isEmpty(product.imageUrl)}"
                          th:src="${product.imageUrl}"
                          th:alt="${product.name}"
-                         class="w-100 h-100 object-fit-cover">
-                    <span class="text-muted small" th:if="${product.imageUrl == null or #strings.isEmpty(product.imageUrl)}">Image</span>
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${product.name}">Ticket Name</h5>
-                    <p class="card-text text-muted small" th:text="${product.description}">Description</p>
-                    <p class="mb-1"><span class="fw-bold" th:text="${product.price}">0.00</span> EUR</p>
-                    <p class="small text-muted mb-3">Stock: <span th:text="${product.stock}">0</span></p>
+                         class="ticket-image">
+                    <span class="text-light small" th:if="${product.imageUrl == null or #strings.isEmpty(product.imageUrl)}">Image</span>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${product.name}">Ticket Name</h5>
+                        <p class="card-text small mb-2" th:text="${product.description}">Description</p>
+                        <p class="mb-1"><span class="fw-bold" th:text="${product.price}">0.00</span> EUR</p>
+                        <p class="small ticket-stock mb-3">Stock: <span th:text="${product.stock}">0</span></p>
                     <div class="ticket-actions">
-                    <a class="btn btn-outline-primary w-100 mb-2" th:href="@{/products/{id}(id=${product.id})}">Details</a>
-                    <form method="post" th:action="@{/cart/add}" class="d-flex gap-2 align-items-center"
-                          th:if="${product.stock > 0}">
-                        <input type="hidden" name="productId" th:value="${product.id}">
-                        <input class="form-control form-control-sm" type="number" name="quantity" value="1" min="1" th:attr="max=${product.stock}" style="max-width: 5rem;">
-                        <button type="submit" class="btn btn-success btn-sm flex-grow-1">Add to Cart</button>
-                    </form>
-                    <button type="button" class="btn btn-secondary btn-sm w-100" disabled
-                            th:if="${product.stock <= 0}">Sold out</button>
+                        <a class="btn btn-outline-light w-100 mb-2" th:href="@{/products/{id}(id=${product.id})}">See more</a>
+                        <form method="post" th:action="@{/cart/add}" class="d-flex gap-2 align-items-center"
+                              th:if="${product.stock > 0}">
+                            <input type="hidden" name="productId" th:value="${product.id}">
+                            <input class="form-control form-control-sm" type="number" name="quantity" value="1" min="1" th:attr="max=${product.stock}" style="max-width: 5rem;">
+                            <button type="submit" class="btn btn-success btn-sm flex-grow-1">Add to Cart</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary btn-sm w-100" disabled
+                                th:if="${product.stock <= 0}">Sold out</button>
+                    </div>
                     </div>
                 </div>
             </div>
