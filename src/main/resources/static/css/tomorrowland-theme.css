@@ -1,0 +1,41 @@
+.tml-bg {
+    background: radial-gradient(circle at top, #2a2048 0%, #161028 45%, #0e0a1b 100%);
+}
+
+.tickets-hero,
+.hero,
+.panel,
+.page-shell {
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 1rem;
+    color: #f8f9fa;
+}
+
+.tickets-hero,
+.hero {
+    background: linear-gradient(135deg, rgba(131, 58, 180, 0.30), rgba(253, 29, 29, 0.20), rgba(252, 176, 69, 0.18));
+}
+
+.panel,
+.page-shell {
+    background: linear-gradient(140deg, rgba(131, 58, 180, 0.24), rgba(253, 29, 29, 0.14), rgba(252, 176, 69, 0.14));
+}
+
+.ticket-card {
+    cursor: pointer;
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.ticket-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 0.85rem 1.4rem rgba(0, 0, 0, 0.28);
+}
+
+.ticket-card .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.ticket-actions {
+    margin-top: auto;
+}

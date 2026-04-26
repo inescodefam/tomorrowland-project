@@ -1,0 +1,75 @@
+.auth-bg {
+    min-height: 100vh;
+    background-image: linear-gradient(140deg, rgba(9, 6, 22, .78), rgba(36, 16, 65, .68), rgba(109, 21, 67, .62)),
+    url('https://res.cloudinary.com/dtasyzjzj/image/upload/v1777216657/1753485388243_d34310b1-9bae-4f25-b57e-70603ff96a1b.jpg_0_8948773507020728790_y5siyx.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.auth-wrap {
+    min-height: calc(100vh - 56px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.auth-card {
+    width: 100%;
+    background: linear-gradient(170deg, rgba(21, 16, 40, .83), rgba(50, 16, 70, .74));
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 1rem;
+    backdrop-filter: blur(9px);
+    color: #f8f9fa;
+    transition: transform .25s ease, box-shadow .25s ease;
+    box-shadow: 0 .7rem 1.6rem rgba(0, 0, 0, .35);
+}
+
+.auth-card.login-card {
+    max-width: 460px;
+}
+
+.auth-card.register-card {
+    max-width: 560px;
+}
+
+.auth-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 1rem 2.2rem rgba(0, 0, 0, .45);
+}
+
+.auth-card .form-label {
+    color: #efe6ff;
+}
+
+.auth-card .form-control {
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .25);
+    color: #ffffff;
+}
+
+.auth-card .form-control:focus {
+    background: rgba(255, 255, 255, .12);
+    border-color: #d38dff;
+    box-shadow: 0 0 0 .2rem rgba(211, 141, 255, .26);
+    color: #ffffff;
+}
+
+.btn-tml {
+    background: linear-gradient(135deg, #7d2cff, #d3428d);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    transition: transform .18s ease, filter .18s ease;
+}
+
+.btn-tml:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    color: #fff;
+}
+
+.auth-link {
+    color: #ffd5fb;
+}
