@@ -1,7 +1,8 @@
 package com.yourname.tomorrowlandshop.integration;
 
-import com.yourname.tomorrowlandshop.domain.entity.Order;
+import com.yourname.tomorrowlandshop.domain.entity.Cart;
 import com.yourname.tomorrowlandshop.domain.entity.Category;
+import com.yourname.tomorrowlandshop.domain.entity.Order;
 import com.yourname.tomorrowlandshop.domain.entity.Product;
 import com.yourname.tomorrowlandshop.domain.entity.User;
 import com.yourname.tomorrowlandshop.domain.enums.Role;
@@ -47,6 +48,7 @@ class ParallelBookingIntegrationTest {
     private CategoryRepository categoryRepository;
     private long seededProductId;
     private List<Long> seededBuyerIds;
+    private Product seededProduct;
 
     @BeforeEach
     void setUp() {
@@ -62,6 +64,7 @@ class ParallelBookingIntegrationTest {
                 .stock(1)
                 .category(category)
                 .build());
+        seededProduct = product;
         seededProductId = product.getId();
         seededBuyerIds = new ArrayList<>();
         for (long i = 1; i <= 10; i++) {
@@ -88,7 +91,9 @@ class ParallelBookingIntegrationTest {
             tasks.add(() -> {
                 start.await();
                 try {
-                    Order order = orderService.placeOrder(buyerId, productId, 1, PaymentMethod.PAYPAL);
+                    Cart cart = new Cart();
+                    cart.addItem(seededProduct, 1);
+                    Order order = orderService.placeOrder(buyerId, cart, PaymentMethod.PAYPAL);
                     return "SUCCESS:" + order.getId();
                 } catch (OrderConflictException ex) {
                     return "CONFLICT";

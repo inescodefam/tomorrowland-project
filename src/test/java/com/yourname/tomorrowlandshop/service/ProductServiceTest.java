@@ -2,6 +2,7 @@ package com.yourname.tomorrowlandshop.service;
 
 import com.yourname.tomorrowlandshop.domain.entity.Product;
 import com.yourname.tomorrowlandshop.domain.exception.NotFoundException;
+import com.yourname.tomorrowlandshop.repository.CategoryRepository;
 import com.yourname.tomorrowlandshop.repository.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,8 @@ class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
+    @Mock
+    private CategoryRepository categoryRepository;
     @InjectMocks
     private ProductService productService;
 

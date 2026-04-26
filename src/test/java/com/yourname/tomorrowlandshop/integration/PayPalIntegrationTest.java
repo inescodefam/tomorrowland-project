@@ -1,35 +1,28 @@
 package com.yourname.tomorrowlandshop.integration;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.yourname.tomorrowlandshop.service.PaymentService;
+import com.yourname.tomorrowlandshop.service.PayPalCheckoutStart;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import java.math.BigDecimal;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
 class PayPalIntegrationTest {
 
-    @RegisterExtension
-    static WireMockExtension wireMock = WireMockExtension.newInstance().build();
-
     @Autowired
     private PaymentService paymentService;
 
     @Test
-    void shouldCompleteSandboxFlowWithWireMock() {
-        wireMock.stubFor(post(urlEqualTo("/v2/checkout/orders"))
-                .willReturn(aResponse().withStatus(201).withBody("{\"id\":\"ORDER-123\",\"status\":\"APPROVED\"}")));
+    void shouldCreateCheckoutSession() {
+        PayPalCheckoutStart start = paymentService.createPayPalCheckout(new BigDecimal("49.99"));
 
-        String result = paymentService.createPayPalOrder(1L);
-
-        assertThat(result).contains("ORDER-123");
+        assertThat(start.approvalUrl()).isNotBlank();
+        assertThat(start.paypalOrderId()).contains("ORDER");
     }
 }

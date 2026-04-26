@@ -13,14 +13,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ProductTest {
 
     @Test
-    @DisplayName("version increments after update")
-    void shouldIncrementVersionOnUpdate() {
+    @DisplayName("price can be updated")
+    void shouldUpdatePrice() {
         Product product = Product.builder().name("Pass").price(new BigDecimal("99.00")).stock(10).build();
-        Long initialVersion = product.getVersion();
 
         product.setPrice(new BigDecimal("109.00"));
 
-        assertThat(product.getVersion()).isNotEqualTo(initialVersion);
+        assertThat(product.getPrice()).isEqualByComparingTo("109.00");
     }
 
     @Test

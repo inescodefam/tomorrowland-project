@@ -9,26 +9,31 @@
 <body>
 <div th:replace="~{layout/base :: navbar}"></div>
 <main class="container py-4">
-    <div class="row">
-        <div class="col-lg-8">
-            <h1 th:text="${product != null ? product.name : 'Product Name'}">Product Name</h1>
-            <p class="text-muted" th:text="${product != null ? product.description : 'Description'}">Description</p>
-            <p class="h4" th:text="${product != null ? product.price : '0.00'}">0.00</p>
-            <p>Stock: <span th:text="${product != null ? product.stock : 0}">0</span></p>
-            <form method="post" th:action="@{/cart/add}">
-                <input type="hidden" name="productId" th:value="${product != null ? product.id : 0}">
-                <div class="row g-2 align-items-end">
-                    <div class="col-md-3">
-                        <label class="form-label" for="product-quantity">Quantity</label>
-                        <input id="product-quantity" class="form-control" type="number" name="quantity" value="1" min="1">
-                    </div>
-                    <div class="col-md-3">
-                        <button type="submit" class="btn btn-success w-100">Add to Cart</button>
-                    </div>
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="ratio ratio-4x3 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center rounded">
+                <span class="text-muted">Image placeholder</span>
+            </div>
+        </div>
+        <div class="col-lg-7">
+            <h1 th:text="${product.name}">Product Name</h1>
+            <p class="text-muted" th:text="${product.description}">Description</p>
+            <p class="h4"><span th:text="${product.price}">0.00</span> EUR</p>
+            <p>Stock: <span th:text="${product.stock}">0</span></p>
+            <form method="post" th:action="@{/cart/add}" class="row g-2 align-items-end mt-3">
+                <input type="hidden" name="productId" th:value="${product.id}">
+                <div class="col-auto">
+                    <label class="form-label" for="product-quantity">Quantity</label>
+                    <input id="product-quantity" class="form-control" type="number" name="quantity" value="1" min="1" th:attr="max=${product.stock}">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-success">Add to Cart</button>
                 </div>
             </form>
         </div>
     </div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

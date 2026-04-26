@@ -32,7 +32,11 @@ class CartTest {
 
         cart.updateQuantity(2L, 3);
 
-        assertThat(cart.getItems().get(2L).getQuantity()).isEqualTo(3);
+        assertThat(cart.getItems()).singleElement()
+                .satisfies(item -> {
+                    assertThat(item.getProductId()).isEqualTo(2L);
+                    assertThat(item.getQuantity()).isEqualTo(3);
+                });
     }
 
     @Test
@@ -51,8 +55,8 @@ class CartTest {
     @DisplayName("clear cart")
     void shouldClearCart() {
         Cart cart = new Cart();
-        cart.addItem(Product.builder().id(1L).price(new BigDecimal("1.00")).build(), 1);
-        cart.addItem(Product.builder().id(2L).price(new BigDecimal("2.00")).build(), 1);
+        cart.addItem(Product.builder().id(1L).name("A").price(new BigDecimal("1.00")).build(), 1);
+        cart.addItem(Product.builder().id(2L).name("B").price(new BigDecimal("2.00")).build(), 1);
 
         cart.clear();
 

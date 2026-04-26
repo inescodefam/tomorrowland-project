@@ -6,9 +6,11 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,6 +23,15 @@ import java.io.IOException;
 @Configuration
 public class SecurityConfig {
 
+    @Bean
+    DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService,
+                                                        PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
+    }
+
     private static void sendApiForbidden(HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
@@ -32,10 +43,12 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter,
-                                            LoginAuditFilter loginAuditFilter) throws Exception {
+                                            LoginAuditFilter loginAuditFilter,
+                                            DaoAuthenticationProvider daoAuthenticationProvider) throws Exception {
+        http.authenticationProvider(daoAuthenticationProvider);
         http.csrf(csrf -> csrf
                 .csrfTokenRepository(new CookieCsrfTokenRepository())
-                .ignoringRequestMatchers(new AntPathRequestMatcher("/api/**"))); 
+                .ignoringRequestMatchers(new AntPathRequestMatcher("/api/**")));
         http.exceptionHandling(ex -> ex
                 .authenticationEntryPoint((request, response, authException) -> {
                     String path = request.getRequestURI();
@@ -64,14 +77,23 @@ public class SecurityConfig {
                     sendApiForbidden(response);
                 }));
         http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("/login", "/register").permitAll()
                 .requestMatchers(HttpMethod.GET, "/products/**", "/categories/**").permitAll()
+                .requestMatchers("/cart/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/orders/checkout").hasRole("USER")
+                .requestMatchers(HttpMethod.GET, "/orders/paypal/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/orders/confirmation").permitAll()
                 .requestMatchers(HttpMethod.POST, "/orders/**").authenticated()
                 .requestMatchers(HttpMethod.GET, "/orders/history").authenticated()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll());
         http.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
-        http.formLogin(Customizer.withDefaults());
+        http.formLogin(form -> form
+                .loginPage("/login")
+                .permitAll()
+                .defaultSuccessUrl("/products", true));
+        http.logout(logout -> logout.logoutSuccessUrl("/products").permitAll());
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(loginAuditFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();

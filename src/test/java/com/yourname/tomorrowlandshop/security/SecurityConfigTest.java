@@ -1,10 +1,13 @@
 package com.yourname.tomorrowlandshop.security;
 
+import com.yourname.tomorrowlandshop.config.PasswordConfig;
 import com.yourname.tomorrowlandshop.controller.AdminController;
 import com.yourname.tomorrowlandshop.controller.CategoryController;
 import com.yourname.tomorrowlandshop.controller.ProductController;
 import com.yourname.tomorrowlandshop.repository.LoginAuditRepository;
+import com.yourname.tomorrowlandshop.repository.UserRepository;
 import com.yourname.tomorrowlandshop.service.AdminService;
+import com.yourname.tomorrowlandshop.service.CategoryService;
 import com.yourname.tomorrowlandshop.service.JwtService;
 import com.yourname.tomorrowlandshop.service.ProductService;
 import org.junit.jupiter.api.Test;
@@ -20,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = {AdminController.class, ProductController.class, CategoryController.class})
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, PasswordConfig.class, CustomUserDetailsService.class})
 class SecurityConfigTest {
 
     @Autowired
@@ -33,6 +36,10 @@ class SecurityConfigTest {
     private AdminService adminService;
     @MockBean
     private ProductService productService;
+    @MockBean
+    private CategoryService categoryService;
+    @MockBean
+    private UserRepository userRepository;
 
     @Test
     void anonymousCanAccessPublicEndpoints() throws Exception {

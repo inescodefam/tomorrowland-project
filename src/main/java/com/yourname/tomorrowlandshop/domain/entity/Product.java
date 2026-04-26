@@ -50,7 +50,6 @@ public class Product {
             throw new InsufficientStockException("Not enough stock");
         }
         stock -= quantity;
-        version = version + 1;
     }
 
     public Long getId() {
@@ -59,6 +58,10 @@ public class Product {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public BigDecimal getPrice() {
@@ -79,11 +82,22 @@ public class Product {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
-        this.version = this.version + 1;
     }
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public static final class Builder {

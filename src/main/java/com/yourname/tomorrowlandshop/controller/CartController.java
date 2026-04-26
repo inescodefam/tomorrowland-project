@@ -1,16 +1,17 @@
 package com.yourname.tomorrowlandshop.controller;
 
 import com.yourname.tomorrowlandshop.service.CartService;
-import org.springframework.http.ResponseEntity;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @RequestMapping("/cart")
 public class CartController {
 
@@ -21,28 +22,33 @@ public class CartController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Void> add(@RequestBody String payload) {
-        if (payload == null) {
-            cartService.toString();
-        }
-        return ResponseEntity.ok().build();
+    public String add(@RequestParam Long productId, @RequestParam(defaultValue = "1") int quantity, HttpSession session) {
+        cartService.addItem(session, productId, quantity);
+        return "redirect:/cart";
+    }
+
+    @GetMapping
+    public String view(HttpSession session, Model model) {
+        model.addAttribute("cart", cartService.getCart(session));
+        model.addAttribute("total", cartService.calculateTotal(session));
+        return "cart/cart";
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> update(@RequestBody String payload) {
-        if (payload != null && !payload.isBlank()) {
-            cartService.toString();
-        }
-        return ResponseEntity.ok().build();
+    public String update(@RequestParam Long productId, @RequestParam int quantity, HttpSession session) {
+        cartService.updateQuantity(session, productId, quantity);
+        return "redirect:/cart";
     }
 
     @DeleteMapping("/remove")
-    public ResponseEntity<Void> remove(@RequestParam Long productId) {
-        return ResponseEntity.noContent().build();
+    public String remove(@RequestParam Long productId, HttpSession session) {
+        cartService.removeItem(session, productId);
+        return "redirect:/cart";
     }
 
     @DeleteMapping("/clear")
-    public ResponseEntity<Void> clear() {
-        return ResponseEntity.noContent().build();
+    public String clear(HttpSession session) {
+        cartService.clearCart(session);
+        return "redirect:/cart";
     }
 }

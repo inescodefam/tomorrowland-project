@@ -4,6 +4,8 @@ import com.yourname.tomorrowlandshop.domain.entity.Order;
 import com.yourname.tomorrowlandshop.domain.enums.PaymentStatus;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class PaymentService implements PaymentProcessor {
 
@@ -30,8 +32,11 @@ public class PaymentService implements PaymentProcessor {
         return "ORDER-123";
     }
 
-    public String createPaypalOrderLegacy(Long orderId) {
-        return createPayPalOrder(orderId);
+    @Override
+    public PayPalCheckoutStart createPayPalCheckout(BigDecimal total) {
+        String suffix = total != null ? total.stripTrailingZeros().toPlainString().replace('.', '-') : "0";
+        return new PayPalCheckoutStart("https://www.sandbox.paypal.com/checkoutnow?token=MOCK-" + suffix,
+                "ORDER-123");
     }
 
     @Override

@@ -1,7 +1,9 @@
 package com.yourname.tomorrowlandshop.service;
 
+import com.yourname.tomorrowlandshop.domain.entity.Category;
 import com.yourname.tomorrowlandshop.domain.entity.Product;
 import com.yourname.tomorrowlandshop.domain.exception.NotFoundException;
+import com.yourname.tomorrowlandshop.repository.CategoryRepository;
 import com.yourname.tomorrowlandshop.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +13,11 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     public List<Product> getAll() {
@@ -22,6 +26,12 @@ public class ProductService {
 
     public Product getById(Long id) {
         return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
+    }
+
+    public List<Product> getByCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("Category not found"));
+        return productRepository.findByCategory(category);
     }
 
     public Product create(Product product) {

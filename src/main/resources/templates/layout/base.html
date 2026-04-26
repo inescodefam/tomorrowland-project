@@ -22,7 +22,7 @@
                     <a class="nav-link" th:href="@{/orders/history}">My Orders</a>
                 </li>
                 <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
-                    <button class="nav-link dropdown-toggle btn btn-link text-decoration-none" type="button"
+                    <button class="nav-link dropdown-toggle btn btn-link text-decoration-none text-white-50" type="button"
                             data-bs-toggle="dropdown" aria-expanded="false">Admin</button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" th:href="@{/admin/products}">Products</a></li>
@@ -32,12 +32,15 @@
                     </ul>
                 </li>
             </ul>
-            <div class="d-flex align-items-center gap-3">
-                <a class="text-white text-decoration-none" th:href="@{/cart}">
-                    Cart <span class="badge bg-warning text-dark" th:text="${cartItemCount} ?: 0">0</span>
+            <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
+                <a class="text-white text-decoration-none position-relative" th:href="@{/cart}">
+                    <span aria-hidden="true">&#128722;</span> Cart
+                    <span class="badge bg-warning text-dark" th:text="${cartItemCount} ?: 0">0</span>
                 </a>
+                <span class="text-white-50 small" sec:authorize="isAuthenticated()" sec:authentication="name"></span>
                 <a class="btn btn-outline-light btn-sm" sec:authorize="isAnonymous()" th:href="@{/login}">Login</a>
-                <form sec:authorize="isAuthenticated()" method="post" th:action="@{/logout}">
+                <a class="btn btn-outline-light btn-sm" sec:authorize="isAnonymous()" th:href="@{/register}">Register</a>
+                <form sec:authorize="isAuthenticated()" method="post" th:action="@{/logout}" class="m-0">
                     <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
                 </form>
             </div>

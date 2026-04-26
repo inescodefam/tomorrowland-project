@@ -22,7 +22,7 @@ class OrderTest {
         Order order = Order.fromCart(1L, cart);
 
         assertThat(order.getTotal()).isEqualByComparingTo("200.00");
-        assertThat(order.getItems()).hasSize(1);
+        assertThat(order.getOrderItems()).hasSize(1);
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PENDING);
     }
 

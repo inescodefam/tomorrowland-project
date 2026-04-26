@@ -1,6 +1,8 @@
 package com.yourname.tomorrowlandshop.domain.entity;
 
 import com.yourname.tomorrowlandshop.domain.enums.OrderStatus;
+import com.yourname.tomorrowlandshop.domain.enums.PaymentMethod;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,12 +13,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -36,8 +39,13 @@ public class Order {
     private OrderStatus status;
     @Column(nullable = false)
     private LocalDateTime createdAt;
-    @Transient
-    private List<CartItem> items;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "payment_method")
+    private PaymentMethod paymentMethod;
+    @Column(name = "paypal_order_id")
+    private String paypalOrderId;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     protected Order() {
     }
@@ -52,8 +60,22 @@ public class Order {
         order.total = cart.getTotal();
         order.status = OrderStatus.PENDING;
         order.createdAt = LocalDateTime.now();
-        order.items = new ArrayList<>(cart.getItems().values());
+        order.orderItems = new ArrayList<>();
+        for (CartItem ci : cart.getItems()) {
+            OrderItem oi = new OrderItem();
+            oi.setProductId(ci.getProductId());
+            oi.setProductName(ci.getProductName());
+            oi.setUnitPrice(ci.getPrice());
+            oi.setQuantity(ci.getQuantity());
+            oi.setOrder(order);
+            order.orderItems.add(oi);
+        }
         return order;
+    }
+
+    public void addOrderItem(OrderItem item) {
+        item.setOrder(this);
+        orderItems.add(item);
     }
 
     public void markPaid() {
@@ -84,8 +106,24 @@ public class Order {
         return createdAt;
     }
 
-    public List<CartItem> getItems() {
-        return items == null ? List.of() : List.copyOf(items);
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaypalOrderId() {
+        return paypalOrderId;
+    }
+
+    public void setPaypalOrderId(String paypalOrderId) {
+        this.paypalOrderId = paypalOrderId;
+    }
+
+    public List<OrderItem> getOrderItems() {
+        return Collections.unmodifiableList(orderItems);
     }
 
     public static final class Builder {
@@ -116,8 +154,18 @@ public class Order {
             return this;
         }
 
-        public Builder items(List<CartItem> value) {
-            target.items = value;
+        public Builder paymentMethod(PaymentMethod value) {
+            target.paymentMethod = value;
+            return this;
+        }
+
+        public Builder paypalOrderId(String value) {
+            target.paypalOrderId = value;
+            return this;
+        }
+
+        public Builder orderItems(List<OrderItem> value) {
+            target.orderItems = new ArrayList<>(value);
             return this;
         }
 
@@ -127,6 +175,9 @@ public class Order {
             }
             if (target.createdAt == null) {
                 target.createdAt = LocalDateTime.now();
+            }
+            if (target.orderItems == null) {
+                target.orderItems = new ArrayList<>();
             }
             return target;
         }

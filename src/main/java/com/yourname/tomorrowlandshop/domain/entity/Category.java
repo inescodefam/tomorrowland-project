@@ -37,6 +37,14 @@ public class Category {
         return description;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public static final class Builder {
         private final Category target = new Category();
 
