@@ -12,24 +12,24 @@
     <h1 class="mb-4">Edit product</h1>
     <form class="row g-3" method="post" th:action="@{/admin/products/{id}(id=${product.id})}" th:if="${product != null}">
         <div class="col-md-6">
-            <label class="form-label">Name</label>
-            <input class="form-control" name="name" th:value="${product.name}" required>
+            <label class="form-label" for="product-edit-name">Name</label>
+            <input id="product-edit-name" class="form-control" name="name" th:value="${product.name}" required>
         </div>
         <div class="col-12">
-            <label class="form-label">Description</label>
-            <input class="form-control" name="description" th:value="${product.description}">
+            <label class="form-label" for="product-edit-description">Description</label>
+            <input id="product-edit-description" class="form-control" name="description" th:value="${product.description}">
         </div>
         <div class="col-md-3">
-            <label class="form-label">Price</label>
-            <input class="form-control" name="price" type="number" step="0.01" th:value="${product.price}" required>
+            <label class="form-label" for="product-edit-price">Price</label>
+            <input id="product-edit-price" class="form-control" name="price" type="number" step="0.01" th:value="${product.price}" required>
         </div>
         <div class="col-md-3">
-            <label class="form-label">Stock</label>
-            <input class="form-control" name="stock" type="number" th:value="${product.stock}" required>
+            <label class="form-label" for="product-edit-stock">Stock</label>
+            <input id="product-edit-stock" class="form-control" name="stock" type="number" th:value="${product.stock}" required>
         </div>
         <div class="col-md-6">
-            <label class="form-label">Category</label>
-            <select class="form-select" name="categoryId" required>
+            <label class="form-label" for="product-edit-category">Category</label>
+            <select id="product-edit-category" class="form-select" name="categoryId" required>
                 <option th:each="c : ${categories}"
                         th:value="${c.id}"
                         th:selected="${product.category != null and product.category.id == c.id}"

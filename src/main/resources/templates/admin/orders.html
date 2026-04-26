@@ -12,16 +12,16 @@
     <h1 class="mb-3">Orders</h1>
     <form class="row g-2 mb-4" method="get" th:action="@{/admin/orders}">
         <div class="col-md-4">
-            <label class="form-label small">Username contains</label>
-            <input name="username" class="form-control" placeholder="Username">
+            <label class="form-label small" for="orders-filter-username">Username contains</label>
+            <input id="orders-filter-username" name="username" class="form-control" placeholder="Username">
         </div>
         <div class="col-md-3">
-            <label class="form-label small">From</label>
-            <input name="from" type="datetime-local" class="form-control">
+            <label class="form-label small" for="orders-filter-from">From</label>
+            <input id="orders-filter-from" name="from" type="datetime-local" class="form-control">
         </div>
         <div class="col-md-3">
-            <label class="form-label small">To</label>
-            <input name="to" type="datetime-local" class="form-control">
+            <label class="form-label small" for="orders-filter-to">To</label>
+            <input id="orders-filter-to" name="to" type="datetime-local" class="form-control">
         </div>
         <div class="col-md-2 d-flex align-items-end">
             <button class="btn btn-primary w-100" type="submit">Filter</button>
