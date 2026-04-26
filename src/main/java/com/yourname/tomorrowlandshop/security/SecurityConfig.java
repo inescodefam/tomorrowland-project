@@ -14,20 +14,55 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @Configuration
 public class SecurityConfig {
+
+    private static void sendApiForbidden(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    }
+
+    private static void redirectToProducts(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String ctx = request.getContextPath();
+        response.sendRedirect(ctx + "/products");
+    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter,
                                             LoginAuditFilter loginAuditFilter) throws Exception {
-        // Cookie-based CSRF token is HttpOnly (default) so XSS cannot read it; Thymeleaf forms get _csrf via RequestDataValueProcessor.
-        // /api/** uses Authorization: Bearer (JWT), not session cookies for auth, so CSRF does not apply the same way (OWASP: CSRF targets cookie-authenticated requests).
         http.csrf(csrf -> csrf
                 .csrfTokenRepository(new CookieCsrfTokenRepository())
-                .ignoringRequestMatchers(new AntPathRequestMatcher("/api/**"))); // NOSONAR (java:S4502) — stateless JWT for /api/**
-        http.exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {
-            response.setStatus(401);
-        }));
+                .ignoringRequestMatchers(new AntPathRequestMatcher("/api/**"))); 
+        http.exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, authException) -> {
+                    String path = request.getRequestURI();
+                    String ctx = request.getContextPath();
+                    if (path.startsWith(ctx + "/api")) {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        return;
+                    }
+                    if (path.startsWith(ctx + "/admin")) {
+                        redirectToProducts(request, response);
+                        return;
+                    }
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                })
+                .accessDeniedHandler((request, response, accessDeniedException) -> {
+                    String path = request.getRequestURI();
+                    String ctx = request.getContextPath();
+                    if (path.startsWith(ctx + "/api")) {
+                        sendApiForbidden(response);
+                        return;
+                    }
+                    if (path.startsWith(ctx + "/admin")) {
+                        redirectToProducts(request, response);
+                        return;
+                    }
+                    sendApiForbidden(response);
+                }));
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.GET, "/products/**", "/categories/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/orders/**").authenticated()
