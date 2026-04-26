@@ -20,9 +20,11 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter,
                                             LoginAuditFilter loginAuditFilter) throws Exception {
+        // Cookie-based CSRF token is HttpOnly (default) so XSS cannot read it; Thymeleaf forms get _csrf via RequestDataValueProcessor.
+        // /api/** uses Authorization: Bearer (JWT), not session cookies for auth, so CSRF does not apply the same way (OWASP: CSRF targets cookie-authenticated requests).
         http.csrf(csrf -> csrf
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .ignoringRequestMatchers(new AntPathRequestMatcher("/api/**")));
+                .csrfTokenRepository(new CookieCsrfTokenRepository())
+                .ignoringRequestMatchers(new AntPathRequestMatcher("/api/**"))); // NOSONAR (java:S4502) — stateless JWT for /api/**
         http.exceptionHandling(ex -> ex.authenticationEntryPoint((request, response, authException) -> {
             response.setStatus(401);
         }));
