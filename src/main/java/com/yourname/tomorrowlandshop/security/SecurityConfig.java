@@ -24,7 +24,6 @@ public class SecurityConfig {
 
     private static final String PRODUCTS_PATH = "/products";
     private static final String API_PATH = "/api";
-    private static final String ADMIN_PATH = "/admin";
 
     @Bean
     DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService,
@@ -59,11 +58,7 @@ public class SecurityConfig {
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         return;
                     }
-                    if (path.startsWith(ctx + ADMIN_PATH)) {
-                        redirectToProducts(request, response);
-                        return;
-                    }
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    redirectToProducts(request, response);
                 })
                 .accessDeniedHandler((request, response, accessDeniedException) -> {
                     String path = request.getRequestURI();
@@ -72,11 +67,7 @@ public class SecurityConfig {
                         sendApiForbidden(response);
                         return;
                     }
-                    if (path.startsWith(ctx + ADMIN_PATH)) {
-                        redirectToProducts(request, response);
-                        return;
-                    }
-                    sendApiForbidden(response);
+                    redirectToProducts(request, response);
                 }));
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/register").permitAll()
