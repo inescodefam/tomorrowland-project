@@ -7,6 +7,7 @@ import com.yourname.tomorrowlandshop.security.CustomUserDetailsService;
 import com.yourname.tomorrowlandshop.security.SecurityConfig;
 import com.yourname.tomorrowlandshop.domain.entity.Product;
 import com.yourname.tomorrowlandshop.service.AdminService;
+import com.yourname.tomorrowlandshop.service.CartService;
 import com.yourname.tomorrowlandshop.service.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,8 @@ class AdminControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private AdminService adminService;
+    @MockBean
+    private CartService cartService;
     @MockBean
     private JwtService jwtService;
     @MockBean

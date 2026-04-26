@@ -10,6 +10,7 @@
 <div th:replace="~{layout/base :: navbar}"></div>
 <main class="container py-4">
     <h1 class="mb-4">Checkout</h1>
+    <div th:if="${checkoutError}" class="alert alert-warning" th:text="${checkoutError}"></div>
     <div class="row g-4">
         <div class="col-lg-7">
             <h5 class="mb-3">Order summary</h5>

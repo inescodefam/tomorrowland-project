@@ -59,7 +59,8 @@ public class OrderService {
             List<OrderItem> lines = new ArrayList<>();
             for (CartItem ci : cart.getItems()) {
                 Product product = productRepository.findByIdWithPessimisticLock(ci.getProductId())
-                        .orElseGet(() -> productRepository.findById(ci.getProductId()).orElseThrow());
+                        .orElseGet(() -> productRepository.findById(ci.getProductId())
+                                .orElseThrow(() -> new InsufficientStockException("Product is no longer available")));
                 if (product.getStock() < ci.getQuantity()) {
                     if (paymentMethod == PaymentMethod.PAYPAL) {
                         throw new OrderConflictException("Insufficient stock under concurrency");

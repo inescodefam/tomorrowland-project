@@ -48,4 +48,26 @@ class CartServiceTest {
         assertThat(cart.getItems()).isEmpty();
         verify(productRepository).findById(1L);
     }
+
+    @Test
+    void reconcileRemovesSoldOutAndCapsQuantity() {
+        cart.addItem(Product.builder().id(1L).name("A").price(new BigDecimal("10")).stock(2).build(), 5);
+        when(productRepository.findById(1L)).thenReturn(Optional.of(
+                Product.builder().id(1L).name("A").price(new BigDecimal("10")).stock(1).build()));
+
+        cartService.reconcileCartWithStock(session);
+
+        assertThat(cart.getItems()).singleElement().satisfies(i -> assertThat(i.getQuantity()).isEqualTo(1));
+    }
+
+    @Test
+    void reconcileRemovesLineWhenStockZero() {
+        cart.addItem(Product.builder().id(2L).name("B").price(BigDecimal.ONE).stock(0).build(), 1);
+        when(productRepository.findById(2L)).thenReturn(Optional.of(
+                Product.builder().id(2L).name("B").price(BigDecimal.ONE).stock(0).build()));
+
+        cartService.reconcileCartWithStock(session);
+
+        assertThat(cart.getItems()).isEmpty();
+    }
 }

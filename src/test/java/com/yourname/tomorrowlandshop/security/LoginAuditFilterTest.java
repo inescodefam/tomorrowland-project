@@ -4,6 +4,7 @@ import com.yourname.tomorrowlandshop.config.PasswordConfig;
 import com.yourname.tomorrowlandshop.controller.HomeController;
 import com.yourname.tomorrowlandshop.repository.LoginAuditRepository;
 import com.yourname.tomorrowlandshop.repository.UserRepository;
+import com.yourname.tomorrowlandshop.service.CartService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ class LoginAuditFilterTest {
     private MockMvc mockMvc;
     @MockBean
     private LoginAuditRepository loginAuditRepository;
+    @MockBean
+    private CartService cartService;
     @MockBean
     private UserRepository userRepository;
 

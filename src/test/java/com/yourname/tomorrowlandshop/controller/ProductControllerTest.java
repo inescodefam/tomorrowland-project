@@ -6,6 +6,7 @@ import com.yourname.tomorrowlandshop.repository.LoginAuditRepository;
 import com.yourname.tomorrowlandshop.repository.UserRepository;
 import com.yourname.tomorrowlandshop.security.CustomUserDetailsService;
 import com.yourname.tomorrowlandshop.security.SecurityConfig;
+import com.yourname.tomorrowlandshop.service.CartService;
 import com.yourname.tomorrowlandshop.service.JwtService;
 import com.yourname.tomorrowlandshop.service.ProductService;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,8 @@ class ProductControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private ProductService productService;
+    @MockBean
+    private CartService cartService;
     @MockBean
     private JwtService jwtService;
     @MockBean

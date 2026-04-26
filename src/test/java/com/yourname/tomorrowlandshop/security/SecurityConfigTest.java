@@ -7,6 +7,7 @@ import com.yourname.tomorrowlandshop.controller.ProductController;
 import com.yourname.tomorrowlandshop.repository.LoginAuditRepository;
 import com.yourname.tomorrowlandshop.repository.UserRepository;
 import com.yourname.tomorrowlandshop.service.AdminService;
+import com.yourname.tomorrowlandshop.service.CartService;
 import com.yourname.tomorrowlandshop.service.CategoryService;
 import com.yourname.tomorrowlandshop.service.JwtService;
 import com.yourname.tomorrowlandshop.service.ProductService;
@@ -30,6 +31,8 @@ class SecurityConfigTest {
     private MockMvc mockMvc;
     @MockBean
     private JwtService jwtService;
+    @MockBean
+    private CartService cartService;
     @MockBean
     private LoginAuditRepository loginAuditRepository;
     @MockBean

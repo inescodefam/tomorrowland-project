@@ -1,5 +1,6 @@
 package com.yourname.tomorrowlandshop.controller;
 
+import com.yourname.tomorrowlandshop.config.CheckoutExceptionHandler;
 import com.yourname.tomorrowlandshop.config.PasswordConfig;
 import com.yourname.tomorrowlandshop.domain.entity.Cart;
 import com.yourname.tomorrowlandshop.domain.entity.Order;
@@ -7,6 +8,7 @@ import com.yourname.tomorrowlandshop.domain.entity.Product;
 import com.yourname.tomorrowlandshop.domain.entity.User;
 import com.yourname.tomorrowlandshop.domain.enums.PaymentMethod;
 import com.yourname.tomorrowlandshop.domain.enums.Role;
+import com.yourname.tomorrowlandshop.domain.exception.InsufficientStockException;
 import com.yourname.tomorrowlandshop.repository.LoginAuditRepository;
 import com.yourname.tomorrowlandshop.repository.UserRepository;
 import com.yourname.tomorrowlandshop.security.CustomUserDetailsService;
@@ -29,14 +31,17 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrderController.class)
-@Import({SecurityConfig.class, PasswordConfig.class, CustomUserDetailsService.class})
+@Import({SecurityConfig.class, PasswordConfig.class, CustomUserDetailsService.class, CheckoutExceptionHandler.class})
 class OrderControllerTest {
 
     @Autowired
@@ -86,5 +91,21 @@ class OrderControllerTest {
 
         mockMvc.perform(post("/orders/checkout").with(csrf()).param("paymentMethod", "PAYPAL"))
                 .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    @WithMockUser(roles = "USER")
+    void checkoutRedirectsToCartWhenOutOfStock() throws Exception {
+        User user = User.builder().id(7L).username("user").role(Role.ROLE_USER).build();
+        when(userRepository.findByUsername("user")).thenReturn(Optional.of(user));
+        Cart cart = new Cart();
+        cart.addItem(Product.builder().id(1L).name("x").price(BigDecimal.TEN).build(), 1);
+        when(cartService.getCart(any())).thenReturn(cart);
+        doThrow(new InsufficientStockException("sold out")).when(orderService)
+                .placeOrder(eq(7L), any(Cart.class), eq(PaymentMethod.CASH_ON_DELIVERY));
+
+        mockMvc.perform(post("/orders/checkout").with(csrf()).param("paymentMethod", "CASH_ON_DELIVERY"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/cart"));
     }
 }

@@ -1,6 +1,7 @@
 package com.yourname.tomorrowlandshop.service;
 
 import com.yourname.tomorrowlandshop.domain.entity.Cart;
+import com.yourname.tomorrowlandshop.domain.entity.CartItem;
 import com.yourname.tomorrowlandshop.domain.entity.Product;
 import com.yourname.tomorrowlandshop.domain.exception.NotFoundException;
 import com.yourname.tomorrowlandshop.repository.ProductRepository;
@@ -8,6 +9,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CartService {
@@ -43,6 +46,23 @@ public class CartService {
 
     public BigDecimal calculateTotal(HttpSession session) {
         return getOrCreate(session).getTotal();
+    }
+
+    /**
+     * Aligns session cart lines with live stock (removes sold-out lines, caps quantity to available stock).
+     */
+    public void reconcileCartWithStock(HttpSession session) {
+        Cart cart = getOrCreate(session);
+        List<CartItem> snapshot = new ArrayList<>(cart.getItems());
+        for (CartItem item : snapshot) {
+            productRepository.findById(item.getProductId()).ifPresentOrElse(product -> {
+                if (product.getStock() <= 0) {
+                    cart.removeItem(item.getProductId());
+                } else if (product.getStock() < item.getQuantity()) {
+                    cart.updateQuantity(item.getProductId(), product.getStock());
+                }
+            }, () -> cart.removeItem(item.getProductId()));
+        }
     }
 
     private Cart getOrCreate(HttpSession session) {

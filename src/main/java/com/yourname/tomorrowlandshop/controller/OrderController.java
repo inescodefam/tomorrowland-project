@@ -41,6 +41,7 @@ public class OrderController {
 
     @GetMapping("/checkout")
     public String checkoutForm(HttpSession session, Model model, RedirectAttributes redirectAttributes) {
+        cartService.reconcileCartWithStock(session);
         Cart cart = cartService.getCart(session);
         if (cart.isEmpty()) {
             redirectAttributes.addFlashAttribute("checkoutError", "Your cart is empty");
@@ -54,10 +55,14 @@ public class OrderController {
     @PostMapping("/checkout")
     public String checkoutPost(@RequestParam PaymentMethod paymentMethod,
                                HttpSession session,
-                               Authentication authentication) {
+                               Authentication authentication,
+                               RedirectAttributes redirectAttributes) {
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow();
+        cartService.reconcileCartWithStock(session);
         Cart cart = cartService.getCart(session);
         if (cart.isEmpty()) {
+            redirectAttributes.addFlashAttribute("checkoutError",
+                    "Items in your cart are no longer in stock. Your cart has been updated.");
             return "redirect:/cart";
         }
         if (paymentMethod == PaymentMethod.CASH_ON_DELIVERY) {
@@ -74,7 +79,8 @@ public class OrderController {
     @GetMapping("/paypal/success")
     public String paypalSuccess(@RequestParam String paypalOrderId,
                                 HttpSession session,
-                                Authentication authentication) {
+                                Authentication authentication,
+                                RedirectAttributes redirectAttributes) {
         String expected = (String) session.getAttribute("paypalOrderId");
         if (expected != null && !expected.equals(paypalOrderId)) {
             return "redirect:/cart";
@@ -83,7 +89,13 @@ public class OrderController {
             return "redirect:/cart";
         }
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow();
+        cartService.reconcileCartWithStock(session);
         Cart cart = cartService.getCart(session);
+        if (cart.isEmpty()) {
+            redirectAttributes.addFlashAttribute("checkoutError",
+                    "Items in your cart are no longer in stock. Your cart has been updated.");
+            return "redirect:/cart";
+        }
         Order order = orderService.placeOrder(user.getId(), cart, PaymentMethod.PAYPAL);
         orderService.confirmPayment(order.getId(), paypalOrderId);
         cartService.clearCart(session);

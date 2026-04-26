@@ -29,6 +29,7 @@ public class CartController {
 
     @GetMapping
     public String view(HttpSession session, Model model) {
+        cartService.reconcileCartWithStock(session);
         model.addAttribute("cart", cartService.getCart(session));
         model.addAttribute("total", cartService.calculateTotal(session));
         return "cart/cart";
