@@ -15,7 +15,7 @@
         <p class="mb-0">Explore different ways to experience Tomorrowland, from weekend passes to one-day entries.</p>
     </section>
     <div class="list-group">
-        <a class="list-group-item list-group-item-action" th:each="cat : ${categories}"
+        <a class="list-group-item list-group-item-action category-item" th:each="cat : ${categories}"
            th:href="@{/categories/{id}(id=${cat.id})}">
             <div class="d-flex w-100 justify-content-between">
                 <h5 class="mb-1" th:text="${cat.name}">Name</h5>

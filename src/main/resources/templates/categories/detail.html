@@ -15,7 +15,7 @@
     <p class="text-muted mb-4" th:text="${category.description}">Description</p>
     <div class="row g-3">
         <div class="col-md-4" th:each="product : ${products}">
-            <div class="card h-100">
+            <div class="card h-100 category-product-card">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${product.name}">Product</h5>
                     <p class="small text-muted" th:text="${product.description}">Desc</p>

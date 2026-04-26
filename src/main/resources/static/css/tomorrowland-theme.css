@@ -91,3 +91,36 @@
     z-index: 2;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
 }
+
+.category-item {
+    background: linear-gradient(140deg, rgba(52, 29, 89, 0.72), rgba(25, 18, 52, 0.78));
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #f8f9fa;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.category-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.65rem 1.1rem rgba(0, 0, 0, 0.26);
+    border-color: rgba(255, 255, 255, 0.26);
+    color: #ffffff;
+}
+
+.category-item .text-muted {
+    color: rgba(239, 230, 255, 0.82) !important;
+}
+
+.category-product-card {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: linear-gradient(145deg, rgba(52, 29, 89, 0.68), rgba(25, 18, 52, 0.76));
+    color: #f8f9fa;
+    box-shadow: 0 0.45rem 0.95rem rgba(0, 0, 0, 0.22);
+}
+
+.category-product-card .card-body {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(10, 8, 18, 0.22));
+}
+
+.category-product-card .text-muted {
+    color: rgba(239, 230, 255, 0.82) !important;
+}
