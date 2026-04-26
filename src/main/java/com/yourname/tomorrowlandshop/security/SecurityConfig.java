@@ -25,8 +25,6 @@ public class SecurityConfig {
     private static final String PRODUCTS_PATH = "/products";
     private static final String API_PATH = "/api";
     private static final String ADMIN_PATH = "/admin";
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER_PREFIX = "Bearer ";
 
     @Bean
     DaoAuthenticationProvider daoAuthenticationProvider(UserDetailsService userDetailsService,
@@ -46,21 +44,13 @@ public class SecurityConfig {
         response.sendRedirect(ctx + PRODUCTS_PATH);
     }
 
-    private static boolean isBearerApiRequest(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        String ctx = request.getContextPath();
-        String authorization = request.getHeader(AUTHORIZATION_HEADER);
-        return path.startsWith(ctx + API_PATH + "/") && authorization != null && authorization.startsWith(BEARER_PREFIX);
-    }
-
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter,
                                             LoginAuditFilter loginAuditFilter,
                                             DaoAuthenticationProvider daoAuthenticationProvider) throws Exception {
         http.authenticationProvider(daoAuthenticationProvider);
         http.csrf(csrf -> csrf
-                .csrfTokenRepository(new CookieCsrfTokenRepository())
-                .ignoringRequestMatchers(SecurityConfig::isBearerApiRequest));
+                .csrfTokenRepository(new CookieCsrfTokenRepository()));
         http.exceptionHandling(ex -> ex
                 .authenticationEntryPoint((request, response, authException) -> {
                     String path = request.getRequestURI();
