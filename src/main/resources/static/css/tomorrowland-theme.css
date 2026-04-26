@@ -124,3 +124,41 @@
 .category-product-card .text-muted {
     color: rgba(239, 230, 255, 0.82) !important;
 }
+
+.btn-success {
+    background: linear-gradient(135deg, #7d2cff, #d3428d);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+}
+
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+    background: linear-gradient(135deg, #7d2cff, #d3428d) !important;
+    color: #fff !important;
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    box-shadow: 0 .35rem .85rem rgba(56, 16, 76, 0.35);
+    border: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #7d2cff, #d3428d);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background: linear-gradient(135deg, #7d2cff, #d3428d) !important;
+    color: #fff !important;
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    box-shadow: 0 .35rem .85rem rgba(56, 16, 76, 0.35);
+    border: none;
+}
