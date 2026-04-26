@@ -8,18 +8,20 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="navbar">
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm"
+     style="background: linear-gradient(90deg, rgba(18,12,37,.96), rgba(45,18,72,.92), rgba(22,14,47,.96)); border-bottom: 1px solid rgba(255,255,255,.18);"
+     th:fragment="navbar">
     <div class="container">
-        <a class="navbar-brand" th:href="@{/products}">Tomorrowland Shop</a>
+        <a class="navbar-brand fw-semibold" style="letter-spacing: .2px;" th:href="@{/products}">Tomorrowland Shop</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" th:href="@{/products}">Products</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/categories}">Categories</a></li>
+                <li class="nav-item"><a class="nav-link text-white-50" th:href="@{/products}">Products</a></li>
+                <li class="nav-item"><a class="nav-link text-white-50" th:href="@{/categories}">Categories</a></li>
                 <li class="nav-item" sec:authorize="hasRole('USER')">
-                    <a class="nav-link" th:href="@{/orders/history}">My Orders</a>
+                    <a class="nav-link text-white-50" th:href="@{/orders/history}">My Orders</a>
                 </li>
                 <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
                     <button class="nav-link dropdown-toggle btn btn-link text-decoration-none text-white-50" type="button"
@@ -33,15 +35,15 @@
                 </li>
             </ul>
             <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end">
-                <a class="text-white text-decoration-none position-relative" th:href="@{/cart}">
+                <a class="text-white text-decoration-none position-relative fw-medium" th:href="@{/cart}">
                     <span aria-hidden="true">&#128722;</span> Cart
-                    <span class="badge bg-warning text-dark" th:text="${cartItemCount} ?: 0">0</span>
+                    <span class="badge rounded-pill" style="background: linear-gradient(135deg,#ffdb6e,#ff9f45); color: #20152f;" th:text="${cartItemCount} ?: 0">0</span>
                 </a>
                 <span class="text-white-50 small" sec:authorize="isAuthenticated()" sec:authentication="name"></span>
-                <a class="btn btn-outline-light btn-sm" sec:authorize="isAnonymous()" th:href="@{/login}">Login</a>
-                <a class="btn btn-outline-light btn-sm" sec:authorize="isAnonymous()" th:href="@{/register}">Register</a>
+                <a class="btn btn-outline-light btn-sm" style="border-color: rgba(255,255,255,.45);" sec:authorize="isAnonymous()" th:href="@{/login}">Login</a>
+                <a class="btn btn-outline-light btn-sm" style="border-color: rgba(255,255,255,.45);" sec:authorize="isAnonymous()" th:href="@{/register}">Register</a>
                 <form sec:authorize="isAuthenticated()" method="post" th:action="@{/logout}" class="m-0">
-                    <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+                    <button type="submit" class="btn btn-outline-light btn-sm" style="border-color: rgba(255,255,255,.45);">Logout</button>
                 </form>
             </div>
         </div>
