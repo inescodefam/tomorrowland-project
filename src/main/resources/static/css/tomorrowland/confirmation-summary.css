@@ -1,0 +1,21 @@
+﻿.confirmation-summary-card {
+    border: 1px solid rgba(255, 255, 255, .16);
+    background: linear-gradient(145deg, rgba(52, 29, 89, .62), rgba(25, 18, 52, .76));
+    box-shadow: 0 .45rem 1rem rgba(0, 0, 0, .28);
+}
+
+.confirmation-summary-body {
+    color: #f8f9fa;
+}
+
+.confirmation-summary-list {
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: .9rem;
+    overflow: hidden;
+}
+
+.confirmation-summary-item {
+    background: linear-gradient(145deg, rgba(52, 29, 89, .46), rgba(25, 18, 52, .62));
+    color: #f8f9fa;
+    border-color: rgba(255, 255, 255, .12);
+}

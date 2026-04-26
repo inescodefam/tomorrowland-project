@@ -1,0 +1,47 @@
+﻿.tml-table-wrap {
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: .9rem;
+    background: linear-gradient(145deg, rgba(52, 29, 89, .4), rgba(25, 18, 52, .54));
+    overflow: hidden;
+}
+
+.tml-table {
+    --bs-table-bg: transparent;
+    --bs-table-striped-bg: rgba(255, 255, 255, .04);
+    --bs-table-striped-color: #f8f9fa;
+    --bs-table-hover-bg: rgba(255, 255, 255, .06);
+    --bs-table-hover-color: #fff;
+    --bs-table-color: #f8f9fa;
+    margin-bottom: 0;
+}
+
+.tml-table thead th {
+    border-bottom-color: rgba(255, 255, 255, .2);
+    color: #fff;
+    font-weight: 600;
+    background: rgba(12, 9, 27, .4);
+}
+
+.tml-table td {
+    border-color: rgba(255, 255, 255, .12);
+}
+
+.tml-table .form-control,
+.tml-table .form-select {
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .22);
+    color: #fff;
+}
+
+.tml-table .form-control:focus,
+.tml-table .form-select:focus {
+    background: rgba(255, 255, 255, .14);
+    border-color: #d38dff;
+    box-shadow: 0 0 0 .2rem rgba(211, 141, 255, .22);
+    color: #fff;
+}
+
+.tml-status-badge {
+    background: linear-gradient(135deg, rgba(125, 44, 255, .92), rgba(211, 66, 141, .92)) !important;
+    color: #fff;
+}

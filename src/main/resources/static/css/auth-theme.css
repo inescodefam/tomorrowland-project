@@ -73,3 +73,14 @@
 .auth-link {
     color: #ffd5fb;
 }
+
+@media (max-width: 575.98px) {
+    html { font-size: 17px; -webkit-text-size-adjust: 100%; }
+    .auth-wrap { padding: 1.25rem .85rem; align-items: flex-start; padding-top: 1.5rem; }
+    .auth-card { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+    .auth-card h1 { font-size: 1.45rem; }
+    .auth-card .small { font-size: .98rem !important; }
+    .auth-card .form-label { font-size: 1rem; }
+    .auth-card .form-control { min-height: 2.65rem; font-size: 1rem; }
+    .btn-tml { min-height: 2.75rem; font-size: 1.05rem; width: 100%; }
+}

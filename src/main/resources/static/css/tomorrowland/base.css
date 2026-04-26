@@ -1,0 +1,45 @@
+﻿.tml-bg {
+    background: radial-gradient(circle at top, #2a2048 0%, #161028 45%, #0e0a1b 100%);
+}
+
+.tickets-hero,
+.hero,
+.panel,
+.page-shell {
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 1rem;
+    color: #f8f9fa;
+}
+
+.tickets-hero,
+.hero {
+    background: linear-gradient(135deg, rgba(131, 58, 180, .3), rgba(253, 29, 29, .2), rgba(252, 176, 69, .18));
+}
+
+.panel,
+.page-shell {
+    background: linear-gradient(140deg, rgba(131, 58, 180, .24), rgba(253, 29, 29, .14), rgba(252, 176, 69, .14));
+}
+
+.btn-primary,
+.btn-success {
+    background: linear-gradient(135deg, #7d2cff, #d3428d);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+    background: linear-gradient(135deg, #7d2cff, #d3428d) !important;
+    color: #fff !important;
+    transform: translateY(-1px);
+    filter: brightness(1.06);
+    box-shadow: 0 .35rem .85rem rgba(56, 16, 76, .35);
+    border: none;
+}

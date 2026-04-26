@@ -1,0 +1,119 @@
+﻿@media (max-width: 575.98px) {
+    html {
+        font-size: 17px;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    .tml-bg main.container {
+        padding-top: 1.25rem !important;
+        padding-bottom: 1.25rem !important;
+    }
+
+    .tickets-hero,
+    .hero {
+        padding: 1.25rem !important;
+    }
+
+    .tickets-hero h1,
+    .hero h1 {
+        font-size: clamp(1.55rem, 5.5vw, 2rem);
+    }
+
+    .panel,
+    .page-shell {
+        padding: 1rem !important;
+    }
+
+    .ticket-media {
+        min-height: 280px;
+    }
+
+    .ticket-card .card-body {
+        padding: 1.25rem;
+    }
+
+    .ticket-card .card-title {
+        font-size: 1.15rem;
+    }
+
+    .ticket-card .card-text {
+        font-size: .98rem !important;
+    }
+
+    .ticket-stock {
+        font-size: .95rem !important;
+    }
+
+    .ticket-actions .btn {
+        min-height: 2.65rem;
+        font-size: 1rem;
+    }
+
+    .ticket-actions .form-control {
+        min-height: 2.65rem;
+        font-size: 1rem;
+    }
+
+    .category-item h5 {
+        font-size: 1.1rem;
+    }
+
+    .category-item .text-muted,
+    .category-product-card .text-muted {
+        font-size: .95rem !important;
+    }
+
+    .category-product-card .card-title {
+        font-size: 1.1rem;
+    }
+
+    .btn {
+        min-height: 2.65rem;
+        padding-top: .55rem;
+        padding-bottom: .55rem;
+        font-size: 1rem;
+    }
+
+    .btn-sm {
+        min-height: 2.45rem;
+        font-size: .95rem;
+        padding-top: .45rem;
+        padding-bottom: .45rem;
+    }
+
+    .form-label {
+        font-size: 1rem;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 2.65rem;
+        font-size: 1rem;
+    }
+
+    .tml-table {
+        font-size: .98rem;
+    }
+
+    .tml-table thead th,
+    .tml-table td {
+        padding: .65rem .55rem;
+    }
+
+    .list-group-item {
+        padding: .85rem 1rem;
+        font-size: 1rem;
+    }
+
+    .checkout-summary-title {
+        font-size: 1.15rem;
+    }
+
+    .checkout-summary-total {
+        font-size: 1.2rem;
+    }
+
+    .checkout-payment-card .card-title {
+        font-size: 1.15rem;
+    }
+}
