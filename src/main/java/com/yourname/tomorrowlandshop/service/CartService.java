@@ -3,6 +3,7 @@ package com.yourname.tomorrowlandshop.service;
 import com.yourname.tomorrowlandshop.domain.entity.Cart;
 import com.yourname.tomorrowlandshop.domain.entity.CartItem;
 import com.yourname.tomorrowlandshop.domain.entity.Product;
+import com.yourname.tomorrowlandshop.domain.exception.InsufficientStockException;
 import com.yourname.tomorrowlandshop.domain.exception.NotFoundException;
 import com.yourname.tomorrowlandshop.repository.ProductRepository;
 import jakarta.servlet.http.HttpSession;
@@ -25,10 +26,25 @@ public class CartService {
 
     public void addItem(HttpSession session, Long productId, int quantity) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        if (product.getStock() <= 0) {
+            throw new InsufficientStockException("Sold out");
+        }
+        if (quantity > product.getStock()) {
+            throw new InsufficientStockException("Only " + product.getStock() + " item(s) left in stock");
+        }
         getOrCreate(session).addItem(product, quantity);
     }
 
     public void updateQuantity(HttpSession session, Long productId, int quantity) {
+        Product product = productRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+        if (product.getStock() <= 0) {
+            getOrCreate(session).removeItem(productId);
+            throw new InsufficientStockException("Sold out");
+        }
+        if (quantity > product.getStock()) {
+            getOrCreate(session).updateQuantity(productId, product.getStock());
+            throw new InsufficientStockException("Quantity adjusted to available stock (" + product.getStock() + ")");
+        }
         getOrCreate(session).updateQuantity(productId, quantity);
     }
 

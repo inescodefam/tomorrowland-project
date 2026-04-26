@@ -37,7 +37,7 @@ class CartServiceTest {
 
     @Test
     void shouldHandleAllCartOperations() {
-        Product product = Product.builder().id(1L).name("P").price(new BigDecimal("15.00")).build();
+        Product product = Product.builder().id(1L).name("P").price(new BigDecimal("15.00")).stock(10).build();
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
 
         cartService.addItem(session, 1L, 2);
@@ -46,7 +46,7 @@ class CartServiceTest {
         cartService.clearCart(session);
 
         assertThat(cart.getItems()).isEmpty();
-        verify(productRepository).findById(1L);
+        verify(productRepository, org.mockito.Mockito.times(2)).findById(1L);
     }
 
     @Test

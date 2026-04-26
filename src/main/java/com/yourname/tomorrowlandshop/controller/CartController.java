@@ -1,5 +1,6 @@
 package com.yourname.tomorrowlandshop.controller;
 
+import com.yourname.tomorrowlandshop.domain.exception.InsufficientStockException;
 import com.yourname.tomorrowlandshop.service.CartService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/cart")
@@ -24,8 +26,15 @@ public class CartController {
     }
 
     @PostMapping("/add")
-    public String add(@RequestParam Long productId, @RequestParam(defaultValue = "1") int quantity, HttpSession session) {
-        cartService.addItem(session, productId, quantity);
+    public String add(@RequestParam Long productId,
+                      @RequestParam(defaultValue = "1") int quantity,
+                      HttpSession session,
+                      RedirectAttributes redirectAttributes) {
+        try {
+            cartService.addItem(session, productId, quantity);
+        } catch (InsufficientStockException ex) {
+            redirectAttributes.addFlashAttribute("checkoutError", ex.getMessage());
+        }
         return REDIRECT_CART;
     }
 
@@ -38,8 +47,15 @@ public class CartController {
     }
 
     @PutMapping("/update")
-    public String update(@RequestParam Long productId, @RequestParam int quantity, HttpSession session) {
-        cartService.updateQuantity(session, productId, quantity);
+    public String update(@RequestParam Long productId,
+                         @RequestParam int quantity,
+                         HttpSession session,
+                         RedirectAttributes redirectAttributes) {
+        try {
+            cartService.updateQuantity(session, productId, quantity);
+        } catch (InsufficientStockException ex) {
+            redirectAttributes.addFlashAttribute("checkoutError", ex.getMessage());
+        }
         return REDIRECT_CART;
     }
 
