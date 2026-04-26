@@ -56,43 +56,9 @@ public class OrderService {
         }
         try {
             User user = userRepository.findById(userId).orElseThrow();
-            List<OrderItem> lines = new ArrayList<>();
-            for (CartItem ci : cart.getItems()) {
-                Product product = productRepository.findByIdWithPessimisticLock(ci.getProductId())
-                        .orElseGet(() -> productRepository.findById(ci.getProductId())
-                                .orElseThrow(() -> new InsufficientStockException("Product is no longer available")));
-                if (product.getStock() < ci.getQuantity()) {
-                    if (paymentMethod == PaymentMethod.PAYPAL) {
-                        throw new OrderConflictException("Insufficient stock under concurrency");
-                    }
-                    throw new InsufficientStockException("Insufficient stock");
-                }
-                product.decrementStock(ci.getQuantity());
-                lines.add(OrderItem.fromProductLine(product, ci.getQuantity()));
-            }
-            BigDecimal total = lines.stream()
-                    .map(OrderItem::getLineTotal)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-            Order order = Order.builder()
-                    .user(user)
-                    .total(total)
-                    .status(OrderStatus.PENDING)
-                    .paymentMethod(paymentMethod)
-                    .build();
-            for (OrderItem line : lines) {
-                order.addOrderItem(line);
-            }
-            Order saved = orderRepository.save(order);
-            if (paymentMethod == PaymentMethod.CASH_ON_DELIVERY) {
-                if (paymentService.processCashOnDelivery(saved) == PaymentStatus.SUCCESS) {
-                    saved.markPaid();
-                }
-            } else {
-                PaymentStatus status = paymentService.initiatePayment(saved);
-                if (status == PaymentStatus.SUCCESS) {
-                    saved.markPaid();
-                }
-            }
+            List<OrderItem> lines = buildOrderItems(cart, paymentMethod);
+            Order saved = orderRepository.save(createPendingOrder(user, paymentMethod, lines));
+            markOrderPaidWhenSuccessful(saved, paymentMethod);
             return orderRepository.save(saved);
         } catch (OptimisticLockException | OptimisticLockingFailureException ex) {
             throw new OrderConflictException("Concurrent order conflict");
@@ -102,6 +68,57 @@ public class OrderService {
                 throw new OrderConflictException("Concurrent order conflict");
             }
             throw ex;
+        }
+    }
+
+    private List<OrderItem> buildOrderItems(Cart cart, PaymentMethod paymentMethod) {
+        List<OrderItem> lines = new ArrayList<>();
+        for (CartItem ci : cart.getItems()) {
+            Product product = loadProductForCheckout(ci.getProductId());
+            validateStock(product, ci.getQuantity(), paymentMethod);
+            product.decrementStock(ci.getQuantity());
+            lines.add(OrderItem.fromProductLine(product, ci.getQuantity()));
+        }
+        return lines;
+    }
+
+    private Product loadProductForCheckout(Long productId) {
+        return productRepository.findByIdWithPessimisticLock(productId)
+                .orElseGet(() -> productRepository.findById(productId)
+                        .orElseThrow(() -> new InsufficientStockException("Product is no longer available")));
+    }
+
+    private void validateStock(Product product, int quantity, PaymentMethod paymentMethod) {
+        if (product.getStock() < quantity) {
+            if (paymentMethod == PaymentMethod.PAYPAL) {
+                throw new OrderConflictException("Insufficient stock under concurrency");
+            }
+            throw new InsufficientStockException("Insufficient stock");
+        }
+    }
+
+    private Order createPendingOrder(User user, PaymentMethod paymentMethod, List<OrderItem> lines) {
+        BigDecimal total = lines.stream()
+                .map(OrderItem::getLineTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        Order order = Order.builder()
+                .user(user)
+                .total(total)
+                .status(OrderStatus.PENDING)
+                .paymentMethod(paymentMethod)
+                .build();
+        for (OrderItem line : lines) {
+            order.addOrderItem(line);
+        }
+        return order;
+    }
+
+    private void markOrderPaidWhenSuccessful(Order order, PaymentMethod paymentMethod) {
+        PaymentStatus status = paymentMethod == PaymentMethod.CASH_ON_DELIVERY
+                ? paymentService.processCashOnDelivery(order)
+                : paymentService.initiatePayment(order);
+        if (status == PaymentStatus.SUCCESS) {
+            order.markPaid();
         }
     }
 

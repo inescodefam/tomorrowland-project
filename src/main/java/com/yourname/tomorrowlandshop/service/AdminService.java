@@ -20,6 +20,8 @@ import java.util.List;
 @Service
 public class AdminService {
 
+    private static final String CATEGORY_NOT_FOUND = "Category not found";
+
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final OrderRepository orderRepository;
@@ -46,7 +48,7 @@ public class AdminService {
     @Transactional
     public void createProduct(ProductDto dto) {
         var category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Category not found"));
+                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
         Product product = Product.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
@@ -61,7 +63,7 @@ public class AdminService {
     public void updateProduct(Long id, ProductDto dto) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Product not found"));
         var category = categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Category not found"));
+                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
@@ -87,7 +89,7 @@ public class AdminService {
 
     @Transactional
     public void updateCategory(Long id, CategoryDto dto) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
         category.setName(dto.getName());
         category.setDescription(dto.getDescription());
         categoryRepository.save(category);
