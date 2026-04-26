@@ -9,11 +9,23 @@
             th:src="|https://www.paypal.com/sdk/js?client-id=${paypalClientId}&amp;currency=EUR|"></script>
     <meta th:name="_csrf" th:content="${_csrf.token}"/>
     <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <style>
+        body { background: radial-gradient(circle at top, #2a2048 0%, #161028 45%, #0e0a1b 100%); }
+        .tickets-hero {
+            background: linear-gradient(135deg, rgba(131,58,180,.30), rgba(253,29,29,.20), rgba(252,176,69,.18));
+            border: 1px solid rgba(255,255,255,.14);
+            border-radius: 1rem;
+            color: #f8f9fa;
+        }
+    </style>
 </head>
 <body>
 <div th:replace="~{layout/base :: navbar}"></div>
 <main class="container py-4">
-    <h1 class="mb-4">Checkout</h1>
+    <section class="tickets-hero p-4 p-md-5 mb-4">
+        <h1 class="mb-2">Checkout</h1>
+        <p class="mb-0">Finalize your ticket order and get ready for the Tomorrowland experience.</p>
+    </section>
     <div th:if="${checkoutError}" class="alert alert-warning" th:text="${checkoutError}"></div>
     <div class="row g-4">
         <div class="col-lg-7">
