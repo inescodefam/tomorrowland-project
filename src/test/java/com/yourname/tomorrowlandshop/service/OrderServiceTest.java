@@ -5,7 +5,6 @@ import com.yourname.tomorrowlandshop.domain.entity.Order;
 import com.yourname.tomorrowlandshop.domain.entity.Product;
 import com.yourname.tomorrowlandshop.domain.entity.User;
 import com.yourname.tomorrowlandshop.domain.enums.PaymentMethod;
-import com.yourname.tomorrowlandshop.domain.enums.PaymentStatus;
 import com.yourname.tomorrowlandshop.domain.exception.InsufficientStockException;
 import com.yourname.tomorrowlandshop.domain.exception.OrderConflictException;
 import com.yourname.tomorrowlandshop.repository.OrderRepository;
@@ -46,7 +45,6 @@ class OrderServiceTest {
         when(productRepository.findByIdWithPessimisticLock(1L)).thenReturn(Optional.of(product));
         when(userRepository.findById(1L)).thenReturn(Optional.of(User.builder().id(1L).build()));
         when(orderRepository.save(any(Order.class))).thenAnswer(i -> i.getArgument(0));
-        when(paymentService.initiatePayment(any(Order.class))).thenReturn(PaymentStatus.SUCCESS);
 
         orderService.placeOrder(1L, cart, PaymentMethod.PAYPAL);
     }

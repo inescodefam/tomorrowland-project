@@ -10,9 +10,11 @@ import java.math.BigDecimal;
 public class PaymentService implements PaymentProcessor {
 
     private final PaypalGateway paypalGateway;
+    private final PayPalService payPalService;
 
-    public PaymentService(PaypalGateway paypalGateway) {
+    public PaymentService(PaypalGateway paypalGateway, PayPalService payPalService) {
         this.paypalGateway = paypalGateway;
+        this.payPalService = payPalService;
     }
 
     @Override
@@ -29,21 +31,24 @@ public class PaymentService implements PaymentProcessor {
 
     @Override
     public String createPayPalOrder(Long orderId) {
-        return "ORDER-123";
+        return "";
     }
 
-    @Override
     public PayPalCheckoutStart createPayPalCheckout(BigDecimal total) {
-        String suffix = total != null ? total.stripTrailingZeros().toPlainString().replace('.', '-') : "0";
-        return new PayPalCheckoutStart("https://www.sandbox.paypal.com/checkoutnow?token=MOCK-" + suffix,
-                "ORDER-123");
+        try {
+            String paypalOrderId = payPalService.createOrder(total);
+            return new PayPalCheckoutStart(
+                    "https://www.sandbox.paypal.com/checkoutnow?token=" + paypalOrderId,
+                    paypalOrderId
+            );
+        } catch (Exception e) {
+            return new PayPalCheckoutStart("https://www.sandbox.paypal.com/checkoutnow?token=ORDER-123", "ORDER-123");
+        }
     }
 
     @Override
     public PaymentStatus capturePayPalOrder(String paypalOrderId) {
-        return paypalOrderId != null && !paypalOrderId.isBlank()
-                ? PaymentStatus.SUCCESS
-                : PaymentStatus.FAILED;
+        return PaymentStatus.CANCELED;
     }
 
     @Override

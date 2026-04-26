@@ -114,9 +114,10 @@ public class OrderService {
     }
 
     private void markOrderPaidWhenSuccessful(Order order, PaymentMethod paymentMethod) {
-        PaymentStatus status = paymentMethod == PaymentMethod.CASH_ON_DELIVERY
-                ? paymentService.processCashOnDelivery(order)
-                : paymentService.initiatePayment(order);
+        if (paymentMethod != PaymentMethod.CASH_ON_DELIVERY) {
+            return;
+        }
+        PaymentStatus status = paymentService.processCashOnDelivery(order);
         if (status == PaymentStatus.SUCCESS) {
             order.markPaid();
         }

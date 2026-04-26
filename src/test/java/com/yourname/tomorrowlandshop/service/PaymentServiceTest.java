@@ -16,6 +16,8 @@ class PaymentServiceTest {
 
     @Mock
     private PaypalGateway paypalGateway;
+    @Mock
+    private PayPalService payPalService;
     @InjectMocks
     private PaymentService paymentService;
 

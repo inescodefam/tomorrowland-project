@@ -17,6 +17,7 @@ import com.yourname.tomorrowlandshop.service.CartService;
 import com.yourname.tomorrowlandshop.service.JwtService;
 import com.yourname.tomorrowlandshop.service.OrderService;
 import com.yourname.tomorrowlandshop.service.PaymentService;
+import com.yourname.tomorrowlandshop.service.PayPalService;
 import com.yourname.tomorrowlandshop.service.PayPalCheckoutStart;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,8 @@ class OrderControllerTest {
     private CartService cartService;
     @MockBean
     private PaymentService paymentService;
+    @MockBean
+    private PayPalService payPalService;
     @MockBean
     private UserRepository userRepository;
     @MockBean

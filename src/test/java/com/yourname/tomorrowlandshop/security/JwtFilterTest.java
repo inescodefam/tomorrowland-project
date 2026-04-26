@@ -11,6 +11,7 @@ import com.yourname.tomorrowlandshop.service.OrderService;
 import com.yourname.tomorrowlandshop.domain.entity.User;
 import com.yourname.tomorrowlandshop.domain.enums.Role;
 import com.yourname.tomorrowlandshop.service.PaymentService;
+import com.yourname.tomorrowlandshop.service.PayPalService;
 import com.yourname.tomorrowlandshop.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,8 @@ class JwtFilterTest {
     private CartService cartService;
     @MockBean
     private PaymentService paymentService;
+    @MockBean
+    private PayPalService payPalService;
     @MockBean
     private UserRepository userRepository;
     @MockBean
