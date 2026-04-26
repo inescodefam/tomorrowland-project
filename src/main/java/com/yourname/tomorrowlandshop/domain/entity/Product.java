@@ -25,6 +25,8 @@ public class Product {
     private String name;
     @Column(length = 1024)
     private String description;
+    @Column(name = "image_url", length = 1024)
+    private String imageUrl;
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal price;
     @Column(nullable = false)
@@ -68,6 +70,10 @@ public class Product {
         return price;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public int getStock() {
         return stock;
     }
@@ -96,6 +102,10 @@ public class Product {
         this.description = description;
     }
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public void setCategory(Category category) {
         this.category = category;
     }
@@ -115,6 +125,11 @@ public class Product {
 
         public Builder description(String value) {
             target.description = value;
+            return this;
+        }
+
+        public Builder imageUrl(String value) {
+            target.imageUrl = value;
             return this;
         }
 

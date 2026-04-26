@@ -11,8 +11,12 @@
 <main class="container py-4">
     <div class="row g-4">
         <div class="col-lg-5">
-            <div class="ratio ratio-4x3 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center rounded">
-                <span class="text-muted">Image placeholder</span>
+            <div class="ratio ratio-4x3 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center rounded overflow-hidden">
+                <img th:if="${product.imageUrl != null and !#strings.isEmpty(product.imageUrl)}"
+                     th:src="${product.imageUrl}"
+                     th:alt="${product.name}"
+                     class="w-100 h-100 object-fit-cover">
+                <span class="text-muted" th:if="${product.imageUrl == null or #strings.isEmpty(product.imageUrl)}">Image placeholder</span>
             </div>
         </div>
         <div class="col-lg-7">

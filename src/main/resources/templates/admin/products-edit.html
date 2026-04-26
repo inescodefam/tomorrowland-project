@@ -19,6 +19,11 @@
             <label class="form-label" for="product-edit-description">Description</label>
             <input id="product-edit-description" class="form-control" name="description" th:value="${product.description}">
         </div>
+        <div class="col-12">
+            <label class="form-label" for="product-edit-image-url">Image URL</label>
+            <input id="product-edit-image-url" class="form-control" name="imageUrl" th:value="${product.imageUrl}"
+                   placeholder="https://example.com/image.jpg">
+        </div>
         <div class="col-md-3">
             <label class="form-label" for="product-edit-price">Price</label>
             <input id="product-edit-price" class="form-control" name="price" type="number" step="0.01" th:value="${product.price}" required>

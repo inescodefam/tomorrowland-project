@@ -44,8 +44,12 @@
     <div class="row g-3">
         <div class="col-md-4" th:each="product : ${products}">
             <div class="card h-100 ticket-card" th:attr="data-href=@{/products/{id}(id=${product.id})}">
-                <div class="ratio ratio-4x3 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center">
-                    <span class="text-muted small">Image</span>
+                <div class="ratio ratio-4x3 bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center overflow-hidden">
+                    <img th:if="${product.imageUrl != null and !#strings.isEmpty(product.imageUrl)}"
+                         th:src="${product.imageUrl}"
+                         th:alt="${product.name}"
+                         class="w-100 h-100 object-fit-cover">
+                    <span class="text-muted small" th:if="${product.imageUrl == null or #strings.isEmpty(product.imageUrl)}">Image</span>
                 </div>
                 <div class="card-body">
                     <h5 class="card-title" th:text="${product.name}">Ticket Name</h5>

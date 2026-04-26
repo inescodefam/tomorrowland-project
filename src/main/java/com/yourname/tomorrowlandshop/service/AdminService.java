@@ -52,6 +52,7 @@ public class AdminService {
         Product product = Product.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
+                .imageUrl(dto.getImageUrl())
                 .price(dto.getPrice())
                 .stock(dto.getStock())
                 .category(category)
@@ -66,6 +67,7 @@ public class AdminService {
                 .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND));
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
+        product.setImageUrl(dto.getImageUrl());
         product.setPrice(dto.getPrice());
         product.setStock(dto.getStock());
         product.setCategory(category);
