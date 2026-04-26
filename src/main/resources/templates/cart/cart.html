@@ -15,8 +15,8 @@
     <div th:if="${param.empty != null}" class="alert alert-warning">Your cart is empty — add tickets from the catalog.</div>
     <div th:if="${checkoutError}" class="alert alert-warning" th:text="${checkoutError}"></div>
     <div th:if="${paypalMessage}" class="alert alert-info" th:text="${paypalMessage}"></div>
-    <div class="table-responsive" th:unless="${#lists.isEmpty(cart.items)}">
-        <table class="table align-middle">
+    <div class="table-responsive tml-table-wrap" th:unless="${#lists.isEmpty(cart.items)}">
+        <table class="table align-middle tml-table">
             <thead>
             <tr>
                 <th>Product</th>

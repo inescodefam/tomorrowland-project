@@ -1,164 +1,33 @@
-.tml-bg {
-    background: radial-gradient(circle at top, #2a2048 0%, #161028 45%, #0e0a1b 100%);
-}
+.tml-bg { background: radial-gradient(circle at top, #2a2048 0%, #161028 45%, #0e0a1b 100%); }
+.tickets-hero, .hero, .panel, .page-shell { border: 1px solid rgba(255, 255, 255, .14); border-radius: 1rem; color: #f8f9fa; }
+.tickets-hero, .hero { background: linear-gradient(135deg, rgba(131,58,180,.3), rgba(253,29,29,.2), rgba(252,176,69,.18)); }
+.panel, .page-shell { background: linear-gradient(140deg, rgba(131,58,180,.24), rgba(253,29,29,.14), rgba(252,176,69,.14)); }
 
-.tickets-hero,
-.hero,
-.panel,
-.page-shell {
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 1rem;
-    color: #f8f9fa;
-}
+.ticket-card { cursor: pointer; transition: transform .18s ease, box-shadow .18s ease; border: 1px solid rgba(255,255,255,.2); border-radius: 1rem; overflow: hidden; background: #140d2d; }
+.ticket-card:hover { transform: translateY(-4px); box-shadow: 0 .85rem 1.4rem rgba(0,0,0,.28); }
+.ticket-card .card-body { display: flex; flex-direction: column; justify-content: flex-end; min-height: 100%; padding: 1.1rem; color: #fff; background: linear-gradient(180deg, rgba(10,8,18,.08) 25%, rgba(10,8,18,.92) 100%); position: absolute; inset: 0; z-index: 2; text-shadow: 0 2px 8px rgba(0,0,0,.65); }
+.ticket-actions { margin-top: auto; }
+.ticket-media { position: relative; min-height: 320px; background: linear-gradient(135deg, rgba(35,22,72,.55), rgba(13,10,31,.78)); }
+.ticket-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(8,6,16,.15) 20%, rgba(8,6,16,.62) 62%, rgba(8,6,16,.9) 100%); z-index: 1; }
+.ticket-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.ticket-card .card-title { font-weight: 700; margin-bottom: .35rem; }
+.ticket-card .card-text { color: rgba(255,255,255,.86) !important; }
+.ticket-stock { color: rgba(255,255,255,.78) !important; }
 
-.tickets-hero,
-.hero {
-    background: linear-gradient(135deg, rgba(131, 58, 180, 0.30), rgba(253, 29, 29, 0.20), rgba(252, 176, 69, 0.18));
-}
+.category-item, .category-product-card { border: 1px solid rgba(255,255,255,.16); color: #f8f9fa; }
+.category-item { background: linear-gradient(140deg, rgba(52,29,89,.72), rgba(25,18,52,.78)); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+.category-item:hover { transform: translateY(-2px); box-shadow: 0 .65rem 1.1rem rgba(0,0,0,.26); border-color: rgba(255,255,255,.26); color: #fff; }
+.category-item .text-muted, .category-product-card .text-muted { color: rgba(239,230,255,.82) !important; }
+.category-product-card { background: linear-gradient(145deg, rgba(52,29,89,.68), rgba(25,18,52,.76)); box-shadow: 0 .45rem .95rem rgba(0,0,0,.22); }
+.category-product-card .card-body { background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(10,8,18,.22)); }
 
-.panel,
-.page-shell {
-    background: linear-gradient(140deg, rgba(131, 58, 180, 0.24), rgba(253, 29, 29, 0.14), rgba(252, 176, 69, 0.14));
-}
+.btn-primary, .btn-success { background: linear-gradient(135deg, #7d2cff, #d3428d); border: none; color: #fff; font-weight: 600; transition: transform .18s ease, filter .18s ease, box-shadow .18s ease; }
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-success:hover, .btn-success:focus, .btn-success:active { background: linear-gradient(135deg, #7d2cff, #d3428d) !important; color: #fff !important; transform: translateY(-1px); filter: brightness(1.06); box-shadow: 0 .35rem .85rem rgba(56,16,76,.35); border: none; }
 
-.ticket-card {
-    cursor: pointer;
-    transition: transform .18s ease, box-shadow .18s ease;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 1rem;
-    overflow: hidden;
-    background: #140d2d;
-}
-
-.ticket-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 0.85rem 1.4rem rgba(0, 0, 0, 0.28);
-}
-
-.ticket-card .card-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-height: 100%;
-    padding: 1.1rem;
-    color: #fff;
-    background: linear-gradient(180deg, rgba(10, 8, 18, 0.08) 25%, rgba(10, 8, 18, 0.92) 100%);
-    position: absolute;
-    inset: 0;
-}
-
-.ticket-actions {
-    margin-top: auto;
-}
-
-.ticket-media {
-    position: relative;
-    min-height: 320px;
-    background: linear-gradient(135deg, rgba(35, 22, 72, 0.55), rgba(13, 10, 31, 0.78));
-}
-
-.ticket-media::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(8, 6, 16, 0.15) 20%, rgba(8, 6, 16, 0.62) 62%, rgba(8, 6, 16, 0.9) 100%);
-    z-index: 1;
-}
-
-.ticket-media img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
-}
-
-.ticket-card .card-title {
-    font-weight: 700;
-    margin-bottom: 0.35rem;
-}
-
-.ticket-card .card-text {
-    color: rgba(255, 255, 255, 0.86) !important;
-}
-
-.ticket-stock {
-    color: rgba(255, 255, 255, 0.78) !important;
-}
-
-.ticket-media .card-body {
-    z-index: 2;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.65);
-}
-
-.category-item {
-    background: linear-gradient(140deg, rgba(52, 29, 89, 0.72), rgba(25, 18, 52, 0.78));
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    color: #f8f9fa;
-    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-
-.category-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0.65rem 1.1rem rgba(0, 0, 0, 0.26);
-    border-color: rgba(255, 255, 255, 0.26);
-    color: #ffffff;
-}
-
-.category-item .text-muted {
-    color: rgba(239, 230, 255, 0.82) !important;
-}
-
-.category-product-card {
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: linear-gradient(145deg, rgba(52, 29, 89, 0.68), rgba(25, 18, 52, 0.76));
-    color: #f8f9fa;
-    box-shadow: 0 0.45rem 0.95rem rgba(0, 0, 0, 0.22);
-}
-
-.category-product-card .card-body {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(10, 8, 18, 0.22));
-}
-
-.category-product-card .text-muted {
-    color: rgba(239, 230, 255, 0.82) !important;
-}
-
-.btn-success {
-    background: linear-gradient(135deg, #7d2cff, #d3428d);
-    border: none;
-    color: #fff;
-    font-weight: 600;
-    transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
-}
-
-.btn-success:hover,
-.btn-success:focus,
-.btn-success:active {
-    background: linear-gradient(135deg, #7d2cff, #d3428d) !important;
-    color: #fff !important;
-    transform: translateY(-1px);
-    filter: brightness(1.06);
-    box-shadow: 0 .35rem .85rem rgba(56, 16, 76, 0.35);
-    border: none;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #7d2cff, #d3428d);
-    border: none;
-    color: #fff;
-    font-weight: 600;
-    transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
-}
-
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary:active {
-    background: linear-gradient(135deg, #7d2cff, #d3428d) !important;
-    color: #fff !important;
-    transform: translateY(-1px);
-    filter: brightness(1.06);
-    box-shadow: 0 .35rem .85rem rgba(56, 16, 76, 0.35);
-    border: none;
-}
+.tml-table-wrap { border: 1px solid rgba(255,255,255,.14); border-radius: .9rem; background: linear-gradient(145deg, rgba(52,29,89,.4), rgba(25,18,52,.54)); overflow: hidden; }
+.tml-table { --bs-table-bg: transparent; --bs-table-striped-bg: rgba(255,255,255,.04); --bs-table-striped-color: #f8f9fa; --bs-table-hover-bg: rgba(255,255,255,.06); --bs-table-hover-color: #fff; --bs-table-color: #f8f9fa; margin-bottom: 0; }
+.tml-table thead th { border-bottom-color: rgba(255,255,255,.2); color: #fff; font-weight: 600; background: rgba(12,9,27,.4); }
+.tml-table td { border-color: rgba(255,255,255,.12); }
+.tml-table .form-control, .tml-table .form-select { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); color: #fff; }
+.tml-table .form-control:focus, .tml-table .form-select:focus { background: rgba(255,255,255,.14); border-color: #d38dff; box-shadow: 0 0 0 .2rem rgba(211,141,255,.22); color: #fff; }
+.tml-status-badge { background: linear-gradient(135deg, rgba(125,44,255,.92), rgba(211,66,141,.92)) !important; color: #fff; }
