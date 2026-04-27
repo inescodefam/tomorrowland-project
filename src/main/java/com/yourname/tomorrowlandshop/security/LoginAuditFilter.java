@@ -8,7 +8,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -27,20 +26,24 @@ public class LoginAuditFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
-        if ("/login".equals(httpRequest.getRequestURI()) && "POST".equalsIgnoreCase(httpRequest.getMethod())) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null && authentication.isAuthenticated() && loginAuditRepository != null) {
+        boolean isLoginAttempt = "/login".equals(httpRequest.getRequestURI())
+                && "POST".equalsIgnoreCase(httpRequest.getMethod());
+
+        chain.doFilter(request, response);
+
+        if (isLoginAttempt && loginAuditRepository != null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            boolean failed = auth == null || !auth.isAuthenticated()
+                    || "anonymousUser".equals(auth.getPrincipal());
+            if (failed) {
+                String username = httpRequest.getParameter("username");
                 loginAuditRepository.save(LoginAudit.builder()
-                        .username(authentication.getName())
+                        .username(username != null ? username : "unknown")
                         .ipAddress(httpRequest.getRemoteAddr())
                         .createdAt(LocalDateTime.now())
-                        .success(true)
+                        .success(false)
                         .build());
-                httpResponse.sendRedirect("/");
-                return;
             }
         }
-        chain.doFilter(request, response);
     }
 }

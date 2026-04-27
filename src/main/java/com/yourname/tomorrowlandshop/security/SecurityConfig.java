@@ -88,7 +88,7 @@ public class SecurityConfig {
                 .defaultSuccessUrl(PRODUCTS_PATH, true));
         http.logout(logout -> logout.logoutSuccessUrl(PRODUCTS_PATH).permitAll());
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(loginAuditFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterAfter(loginAuditFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
