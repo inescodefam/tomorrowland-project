@@ -6,11 +6,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "login_audit")
+@Getter
+@Builder(builderMethodName = "internalBuilder")
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LoginAudit {
 
     @Id
@@ -25,71 +34,18 @@ public class LoginAudit {
     @Column(nullable = false)
     private boolean success;
 
-    protected LoginAudit() {
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getIpAddress() {
-        return ipAddress;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public boolean isSuccess() {
-        return success;
+    public static LoginAuditBuilder builder() {
+        return internalBuilder();
     }
 
     public LocalDateTime getLoginAt() {
         return getCreatedAt();
     }
 
-    public static final class Builder {
-        private final LoginAudit target = new LoginAudit();
-
-        public Builder id(Long value) {
-            target.id = value;
+    public static class LoginAuditBuilder {
+        public LoginAuditBuilder loginAt(LocalDateTime value) {
+            this.createdAt = value;
             return this;
-        }
-
-        public Builder username(String value) {
-            target.username = value;
-            return this;
-        }
-
-        public Builder ipAddress(String value) {
-            target.ipAddress = value;
-            return this;
-        }
-
-        public Builder loginAt(LocalDateTime value) {
-            target.createdAt = value;
-            return this;
-        }
-
-        public Builder createdAt(LocalDateTime value) {
-            return loginAt(value);
-        }
-
-        public Builder success(boolean value) {
-            target.success = value;
-            return this;
-        }
-
-        public LoginAudit build() {
-            return target;
         }
     }
 }

@@ -9,11 +9,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "order_items")
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderItem {
 
     @Id
@@ -31,9 +38,6 @@ public class OrderItem {
     @Column(nullable = false)
     private int quantity;
 
-    protected OrderItem() {
-    }
-
     public static OrderItem fromProductLine(Product product, int quantity) {
         OrderItem item = new OrderItem();
         item.productId = product.getId();
@@ -43,48 +47,9 @@ public class OrderItem {
         return item;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
+    @Setter(AccessLevel.PACKAGE)
     void setOrder(Order order) {
         this.order = order;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public BigDecimal getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(BigDecimal unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     public BigDecimal getLineTotal() {

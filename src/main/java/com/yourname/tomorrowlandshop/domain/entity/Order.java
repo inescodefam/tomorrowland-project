@@ -15,6 +15,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,6 +29,10 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Order {
 
     @Id
@@ -36,23 +45,19 @@ public class Order {
     private BigDecimal total;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private OrderStatus status;
+    @Builder.Default
+    private OrderStatus status = OrderStatus.PENDING;
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_method")
     private PaymentMethod paymentMethod;
     @Column(name = "paypal_order_id")
     private String paypalOrderId;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
-
-    protected Order() {
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
 
     public static Order fromCart(Long userId, Cart cart) {
         Order order = new Order();
@@ -90,36 +95,8 @@ public class Order {
         this.status = OrderStatus.CANCELLED;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
-    }
-
-    public String getPaypalOrderId() {
-        return paypalOrderId;
     }
 
     public void setPaypalOrderId(String paypalOrderId) {
@@ -130,60 +107,11 @@ public class Order {
         return Collections.unmodifiableList(orderItems);
     }
 
-    public static final class Builder {
-        private final Order target = new Order();
-
-        public Builder id(Long value) {
-            target.id = value;
+    public static class OrderBuilder {
+        public OrderBuilder orderItems(List<OrderItem> value) {
+            this.orderItems = new ArrayList<>(value);
             return this;
-        }
-
-        public Builder user(User value) {
-            target.user = value;
-            return this;
-        }
-
-        public Builder total(BigDecimal value) {
-            target.total = value;
-            return this;
-        }
-
-        public Builder status(OrderStatus value) {
-            target.status = value;
-            return this;
-        }
-
-        public Builder createdAt(LocalDateTime value) {
-            target.createdAt = value;
-            return this;
-        }
-
-        public Builder paymentMethod(PaymentMethod value) {
-            target.paymentMethod = value;
-            return this;
-        }
-
-        public Builder paypalOrderId(String value) {
-            target.paypalOrderId = value;
-            return this;
-        }
-
-        public Builder orderItems(List<OrderItem> value) {
-            target.orderItems = new ArrayList<>(value);
-            return this;
-        }
-
-        public Order build() {
-            if (target.status == null) {
-                target.status = OrderStatus.PENDING;
-            }
-            if (target.createdAt == null) {
-                target.createdAt = LocalDateTime.now();
-            }
-            if (target.orderItems == null) {
-                target.orderItems = new ArrayList<>();
-            }
-            return target;
         }
     }
+
 }

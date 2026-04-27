@@ -6,9 +6,20 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "categories")
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
 
     @Id
@@ -17,54 +28,4 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
     private String description;
-
-    protected Category() {
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public static final class Builder {
-        private final Category target = new Category();
-
-        public Builder id(Long value) {
-            target.id = value;
-            return this;
-        }
-
-        public Builder name(String value) {
-            target.name = value;
-            return this;
-        }
-
-        public Builder description(String value) {
-            target.description = value;
-            return this;
-        }
-
-        public Category build() {
-            return target;
-        }
-    }
 }
