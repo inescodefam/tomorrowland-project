@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.UUID;
 
 public class JwtService {
 
@@ -46,10 +47,19 @@ public class JwtService {
         return parseClaims(token).getExpiration().before(new Date());
     }
 
+    public String extractTokenId(String token) {
+        return parseClaims(token).getId();
+    }
+
+    public Instant extractExpiration(String token) {
+        return parseClaims(token).getExpiration().toInstant();
+    }
+
     private String generateToken(String username, Duration ttl) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .subject(username)
+                .id(UUID.randomUUID().toString())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(ttl)))
                 .signWith(key)

@@ -71,6 +71,7 @@ public class SecurityConfig {
                 }));
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/register").permitAll()
+                .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/products/**", "/categories/**").permitAll()
                 .requestMatchers("/cart/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/orders/checkout").hasRole("USER")

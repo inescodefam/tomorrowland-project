@@ -2,6 +2,7 @@ package com.yourname.tomorrowlandshop.controller;
 
 import com.yourname.tomorrowlandshop.repository.UserRepository;
 import com.yourname.tomorrowlandshop.service.JwtService;
+import com.yourname.tomorrowlandshop.service.RefreshTokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,6 +36,7 @@ public class AuthRestController {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenService refreshTokenService;
     @Value("${app.cookie.secure:true}")
     private boolean secureCookie;
 
@@ -49,8 +51,15 @@ public class AuthRestController {
         return userRepository.findByUsername(username)
                 .filter(u -> passwordEncoder.matches(password, u.getPassword()))
                 .map(u -> {
-                    setCookie(response, ACCESS_COOKIE,  jwtService.generateAccessToken(u.getUsername()),  ACCESS_TTL);
-                    setCookie(response, REFRESH_COOKIE, jwtService.generateRefreshToken(u.getUsername()), REFRESH_TTL);
+                    String accessToken = jwtService.generateAccessToken(u.getUsername());
+                    String refreshToken = jwtService.generateRefreshToken(u.getUsername());
+                    refreshTokenService.persist(
+                            jwtService.extractTokenId(refreshToken),
+                            u,
+                            jwtService.extractExpiration(refreshToken)
+                    );
+                    setCookie(response, ACCESS_COOKIE, accessToken, ACCESS_TTL);
+                    setCookie(response, REFRESH_COOKIE, refreshToken, REFRESH_TTL);
                     return ResponseEntity.ok(Map.of(MESSAGE_KEY, "Login successful"));
                 })
                 .orElseGet(() -> ResponseEntity.status(401).body(Map.of(ERROR_KEY, "Invalid credentials")));
@@ -61,18 +70,46 @@ public class AuthRestController {
                                                        HttpServletResponse response) {
         String refreshToken = readCookie(request, REFRESH_COOKIE);
         if (refreshToken == null || !jwtService.validateToken(refreshToken) || jwtService.isTokenExpired(refreshToken)) {
+            clearAuthCookies(response);
             return ResponseEntity.status(401).body(Map.of(ERROR_KEY, "Invalid refresh token"));
         }
+        String oldTokenId = jwtService.extractTokenId(refreshToken);
         String username = jwtService.extractUsername(refreshToken);
-        setCookie(response, ACCESS_COOKIE, jwtService.generateAccessToken(username), ACCESS_TTL);
+        if (!refreshTokenService.isActive(oldTokenId, username)) {
+            clearAuthCookies(response);
+            return ResponseEntity.status(401).body(Map.of(ERROR_KEY, "Invalid refresh token"));
+        }
+        String accessToken = jwtService.generateAccessToken(username);
+        String rotatedRefreshToken = jwtService.generateRefreshToken(username);
+        String rotatedTokenId = jwtService.extractTokenId(rotatedRefreshToken);
+
+        var userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            refreshTokenService.revoke(oldTokenId);
+            clearAuthCookies(response);
+            return ResponseEntity.status(401).body(Map.of(ERROR_KEY, "Invalid refresh token"));
+        }
+        refreshTokenService.revoke(oldTokenId);
+        refreshTokenService.persist(rotatedTokenId, userOptional.get(), jwtService.extractExpiration(rotatedRefreshToken));
+
+        setCookie(response, ACCESS_COOKIE, accessToken, ACCESS_TTL);
+        setCookie(response, REFRESH_COOKIE, rotatedRefreshToken, REFRESH_TTL);
         return ResponseEntity.ok(Map.of(MESSAGE_KEY, "Token refreshed"));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, String>> logout(HttpServletResponse response) {
-        setCookie(response, ACCESS_COOKIE,  "", 0);
-        setCookie(response, REFRESH_COOKIE, "", 0);
+    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = readCookie(request, REFRESH_COOKIE);
+        if (refreshToken != null && jwtService.validateToken(refreshToken)) {
+            refreshTokenService.revoke(jwtService.extractTokenId(refreshToken));
+        }
+        clearAuthCookies(response);
         return ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logged out"));
+    }
+
+    private void clearAuthCookies(HttpServletResponse response) {
+        setCookie(response, ACCESS_COOKIE, "", 0);
+        setCookie(response, REFRESH_COOKIE, "", 0);
     }
 
     private void setCookie(HttpServletResponse response, String name, String value, int maxAge) {

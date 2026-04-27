@@ -31,11 +31,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = extractToken(request);
         if (jwtService != null && token != null) {
-            if (!jwtService.validateToken(token) || jwtService.isTokenExpired(token)) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-            if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (jwtService.validateToken(token) && !jwtService.isTokenExpired(token)
+                    && SecurityContextHolder.getContext().getAuthentication() == null) {
                 String username = jwtService.extractUsername(token);
                 if (username == null || username.isBlank()) {
                     username = "jwt-user";
