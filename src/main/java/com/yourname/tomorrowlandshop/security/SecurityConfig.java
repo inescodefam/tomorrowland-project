@@ -95,8 +95,7 @@ public class SecurityConfig {
                                             UserRepository userRepository) throws Exception {
         http.authenticationProvider(daoAuthenticationProvider);
         http.csrf(csrf -> csrf
-                .csrfTokenRepository(new CookieCsrfTokenRepository())
-                .ignoringRequestMatchers(new AntPathRequestMatcher("/api/**")));
+                .csrfTokenRepository(new CookieCsrfTokenRepository()));
         http.exceptionHandling(ex -> ex
                 .authenticationEntryPoint((request, response, authException) -> {
                     String path = request.getRequestURI();
