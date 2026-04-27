@@ -11,10 +11,14 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import jakarta.servlet.http.Cookie;
+
 import java.io.IOException;
 import java.util.List;
 
 public class JwtAuthFilter extends OncePerRequestFilter {
+
+    private static final String ACCESS_COOKIE = "access_token";
 
     private final JwtService jwtService;
 
@@ -25,9 +29,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String header = request.getHeader("Authorization");
-        if (jwtService != null && header != null && header.startsWith("Bearer ")) {
-            String token = header.substring(7);
+        String token = extractToken(request);
+        if (jwtService != null && token != null) {
             if (!jwtService.validateToken(token) || jwtService.isTokenExpired(token)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
@@ -45,5 +48,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(request, response);
+    }
+
+    private static String extractToken(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7);
+        }
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (ACCESS_COOKIE.equals(c.getName())) return c.getValue();
+            }
+        }
+        return null;
     }
 }
