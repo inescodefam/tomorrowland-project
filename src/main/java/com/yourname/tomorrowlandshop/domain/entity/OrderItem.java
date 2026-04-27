@@ -28,6 +28,7 @@ public class OrderItem {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "order_id")
+    @Setter(AccessLevel.PACKAGE)
     private Order order;
     @Column(nullable = false)
     private Long productId;
@@ -45,11 +46,6 @@ public class OrderItem {
         item.unitPrice = product.getPrice();
         item.quantity = quantity;
         return item;
-    }
-
-    @Setter(AccessLevel.PACKAGE)
-    void setOrder(Order order) {
-        this.order = order;
     }
 
     public BigDecimal getLineTotal() {

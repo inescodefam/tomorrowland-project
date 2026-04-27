@@ -49,10 +49,6 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public static Builder builder() {
-        return new Builder();
-    }
-
     public void decrementStock(int quantity) {
         if (quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
