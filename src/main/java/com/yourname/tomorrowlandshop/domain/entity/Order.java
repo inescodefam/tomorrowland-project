@@ -107,11 +107,4 @@ public class Order {
         return Collections.unmodifiableList(orderItems);
     }
 
-    public static class OrderBuilder {
-        public OrderBuilder orderItems(List<OrderItem> value) {
-            this.orderItems = new ArrayList<>(value);
-            return this;
-        }
-    }
-
 }
