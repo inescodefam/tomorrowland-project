@@ -86,6 +86,10 @@ public class Order {
         this.status = OrderStatus.SHIPPED;
     }
 
+    public void markCancelled() {
+        this.status = OrderStatus.CANCELLED;
+    }
+
     public Long getId() {
         return id;
     }

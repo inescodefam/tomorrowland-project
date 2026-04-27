@@ -54,6 +54,13 @@ public class Product {
         stock -= quantity;
     }
 
+    public void incrementStock(int quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Quantity must be positive");
+        }
+        stock += quantity;
+    }
+
     public Long getId() {
         return id;
     }

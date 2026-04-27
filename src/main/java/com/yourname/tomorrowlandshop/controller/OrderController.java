@@ -3,6 +3,7 @@ package com.yourname.tomorrowlandshop.controller;
 import com.yourname.tomorrowlandshop.domain.entity.Cart;
 import com.yourname.tomorrowlandshop.domain.entity.Order;
 import com.yourname.tomorrowlandshop.domain.entity.User;
+import com.yourname.tomorrowlandshop.domain.exception.InsufficientStockException;
 import com.yourname.tomorrowlandshop.domain.enums.PaymentMethod;
 import com.yourname.tomorrowlandshop.domain.enums.PaymentStatus;
 import com.yourname.tomorrowlandshop.repository.UserRepository;
@@ -36,6 +37,7 @@ public class OrderController {
     private static final String PAYPAL_ORDER_ID_ATTRIBUTE = "pendingPaypalOrderId";
     private static final String STOCK_UPDATED_MESSAGE =
             "Items in your cart are no longer in stock. Your cart has been updated.";
+    private static final String ERROR_KEY = "error";
 
     private final OrderService orderService;
     private final CartService cartService;
@@ -94,14 +96,14 @@ public class OrderController {
             cartService.reconcileCartWithStock(session);
             Cart cart = cartService.getCart(session);
             if (cart.isEmpty()) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Cart is empty"));
+                return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, "Cart is empty"));
             }
             BigDecimal total = cartService.calculateTotal(session);
             String paypalOrderId = payPalService.createOrder(total);
             session.setAttribute(PAYPAL_ORDER_ID_ATTRIBUTE, paypalOrderId);
             return ResponseEntity.ok(Map.of("paypalOrderId", paypalOrderId));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("error", "Could not create PayPal order"));
+            return ResponseEntity.internalServerError().body(Map.of(ERROR_KEY, "Could not create PayPal order"));
         }
     }
 
@@ -110,25 +112,31 @@ public class OrderController {
     public ResponseEntity<Map<String, Object>> capturePayPalOrder(@RequestParam String paypalOrderId,
                                                                    @AuthenticationPrincipal UserDetails userDetails,
                                                                    HttpSession session) {
+        String expected = (String) session.getAttribute(PAYPAL_ORDER_ID_ATTRIBUTE);
+        if (expected != null && !expected.equals(paypalOrderId)) {
+            return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, "Invalid PayPal order id"));
+        }
+        cartService.reconcileCartWithStock(session);
+        Cart cart = cartService.getCart(session);
+        if (cart.isEmpty()) {
+            return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, "Cart is empty"));
+        }
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+        Order order = null;
         try {
-            String expected = (String) session.getAttribute(PAYPAL_ORDER_ID_ATTRIBUTE);
-            if (expected != null && !expected.equals(paypalOrderId)) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Invalid PayPal order id"));
-            }
+            order = orderService.placeOrder(user.getId(), cart, PaymentMethod.PAYPAL);
             payPalService.captureOrder(paypalOrderId);
-            cartService.reconcileCartWithStock(session);
-            Cart cart = cartService.getCart(session);
-            if (cart.isEmpty()) {
-                return ResponseEntity.badRequest().body(Map.of("error", "Cart is empty"));
-            }
-            User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
-            Order order = orderService.placeOrder(user.getId(), cart, PaymentMethod.PAYPAL);
             orderService.confirmPayment(order.getId(), paypalOrderId);
             cartService.clearCart(session);
             session.removeAttribute(PAYPAL_ORDER_ID_ATTRIBUTE);
             return ResponseEntity.ok(Map.of("orderId", order.getId(), "status", PaymentStatus.SUCCESS.name()));
+        } catch (InsufficientStockException e) {
+            return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, "insufficient_stock"));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of("error", "Payment capture failed"));
+            if (order != null) {
+                orderService.cancelOrder(order.getId());
+            }
+            return ResponseEntity.internalServerError().body(Map.of(ERROR_KEY, "payment_failed"));
         }
     }
 

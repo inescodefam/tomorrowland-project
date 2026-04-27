@@ -148,4 +148,20 @@ public class OrderService {
         }
         orderRepository.save(order);
     }
+
+    @Transactional
+    public void cancelOrder(Long orderId) {
+        Order order = orderRepository.findDetailById(orderId)
+                .orElseThrow(() -> new NotFoundException("Order not found"));
+        if (order.getStatus() != OrderStatus.PENDING) {
+            return;
+        }
+        for (OrderItem item : order.getOrderItems()) {
+            Product product = productRepository.findById(item.getProductId()).orElseThrow();
+            product.incrementStock(item.getQuantity());
+            productRepository.save(product);
+        }
+        order.markCancelled();
+        orderRepository.save(order);
+    }
 }

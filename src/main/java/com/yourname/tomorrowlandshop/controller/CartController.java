@@ -18,6 +18,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CartController {
 
     private static final String REDIRECT_CART = "redirect:/cart";
+    private static final String CHECKOUT_ERROR = CHECKOUT_ERROR;
+    private static final String PAYPAL_MESSAGE = PAYPAL_MESSAGE;
 
     private final CartService cartService;
 
@@ -33,16 +35,26 @@ public class CartController {
         try {
             cartService.addItem(session, productId, quantity);
         } catch (InsufficientStockException ex) {
-            redirectAttributes.addFlashAttribute("checkoutError", ex.getMessage());
+            redirectAttributes.addFlashAttribute(CHECKOUT_ERROR, ex.getMessage());
         }
         return REDIRECT_CART;
     }
 
     @GetMapping
-    public String view(HttpSession session, Model model) {
+    public String view(HttpSession session, Model model,
+                       @RequestParam(required = false) String message) {
         cartService.reconcileCartWithStock(session);
         model.addAttribute("cart", cartService.getCart(session));
         model.addAttribute("total", cartService.calculateTotal(session));
+        if ("paypal-cancelled".equals(message)) {
+            model.addAttribute(PAYPAL_MESSAGE, "PayPal payment was cancelled.");
+        } else if ("paypal-timeout".equals(message)) {
+            model.addAttribute(PAYPAL_MESSAGE, "Payment window expired. Your reservation has been released.");
+        } else if ("paypal-error".equals(message)) {
+            model.addAttribute(PAYPAL_MESSAGE, "PayPal payment failed. Please try again.");
+        } else if ("out-of-stock".equals(message)) {
+            model.addAttribute(CHECKOUT_ERROR, "Sorry, this item sold out while you were paying. You have not been charged.");
+        }
         return "cart/cart";
     }
 
@@ -54,7 +66,7 @@ public class CartController {
         try {
             cartService.updateQuantity(session, productId, quantity);
         } catch (InsufficientStockException ex) {
-            redirectAttributes.addFlashAttribute("checkoutError", ex.getMessage());
+            redirectAttributes.addFlashAttribute(CHECKOUT_ERROR, ex.getMessage());
         }
         return REDIRECT_CART;
     }
