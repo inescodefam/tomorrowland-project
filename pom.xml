@@ -19,7 +19,6 @@
 
     <properties>
         <java.version>21</java.version>
-        <!-- Override Boot 3.3.4 managed Flyway for PostgreSQL 17+ (requires flyway-database-postgresql) -->
         <flyway.version>10.20.1</flyway.version>
         <sonar.projectKey>tomorrowland-shop</sonar.projectKey>
         <sonar.organization>your-github-username</sonar.organization>
