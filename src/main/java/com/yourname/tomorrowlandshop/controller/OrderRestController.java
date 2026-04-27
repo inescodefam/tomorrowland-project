@@ -3,6 +3,7 @@ package com.yourname.tomorrowlandshop.controller;
 import com.yourname.tomorrowlandshop.domain.enums.PaymentStatus;
 import com.yourname.tomorrowlandshop.service.PayPalService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/orders/paypal")
 @RequiredArgsConstructor
+@Slf4j
 public class OrderRestController {
 
     private final PayPalService payPalService;
@@ -25,6 +27,7 @@ public class OrderRestController {
             String paypalOrderId = payPalService.createOrder(java.math.BigDecimal.valueOf(cents, 2));
             return ResponseEntity.ok(Map.of("paypalOrderId", paypalOrderId));
         } catch (Exception e) {
+            log.error("Failed to create PayPal order for amountCents={}", cents, e);
             return ResponseEntity.internalServerError().body(Map.of("error", "Could not create PayPal order"));
         }
     }
@@ -36,6 +39,7 @@ public class OrderRestController {
             String status = payPalService.captureOrder(paypalOrderId);
             return ResponseEntity.ok(Map.of("status", status));
         } catch (Exception e) {
+            log.error("Failed to capture PayPal order paypalOrderId={}", paypalOrderId, e);
             return ResponseEntity.internalServerError().body(Map.of("status", PaymentStatus.FAILED.name()));
         }
     }

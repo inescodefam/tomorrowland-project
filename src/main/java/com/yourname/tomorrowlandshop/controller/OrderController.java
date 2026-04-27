@@ -12,6 +12,7 @@ import com.yourname.tomorrowlandshop.service.OrderService;
 import com.yourname.tomorrowlandshop.service.PayPalService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,6 +33,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/orders")
 @RequiredArgsConstructor
+@Slf4j
 public class OrderController {
 
     private static final String REDIRECT_CART = "redirect:/cart";
@@ -97,6 +99,7 @@ public class OrderController {
             session.setAttribute(PAYPAL_ORDER_ID_ATTRIBUTE, paypalOrderId);
             return ResponseEntity.ok(Map.of("paypalOrderId", paypalOrderId));
         } catch (Exception e) {
+            log.error("Failed to create PayPal order for current session cart", e);
             return ResponseEntity.internalServerError().body(Map.of(ERROR_KEY, "Could not create PayPal order"));
         }
     }
@@ -125,11 +128,13 @@ public class OrderController {
             session.removeAttribute(PAYPAL_ORDER_ID_ATTRIBUTE);
             return ResponseEntity.ok(Map.of("orderId", order.getId(), "status", PaymentStatus.SUCCESS.name()));
         } catch (InsufficientStockException e) {
+            log.warn("PayPal capture aborted due to insufficient stock for order request {}", paypalOrderId, e);
             return ResponseEntity.badRequest().body(Map.of(ERROR_KEY, "insufficient_stock"));
         } catch (Exception e) {
             if (order != null) {
                 orderService.cancelOrder(order.getId());
             }
+            log.error("PayPal capture failed for paypalOrderId={}", paypalOrderId, e);
             return ResponseEntity.internalServerError().body(Map.of(ERROR_KEY, "payment_failed"));
         }
     }
