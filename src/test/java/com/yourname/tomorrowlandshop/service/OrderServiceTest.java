@@ -4,6 +4,7 @@ import com.yourname.tomorrowlandshop.domain.entity.Cart;
 import com.yourname.tomorrowlandshop.domain.entity.Order;
 import com.yourname.tomorrowlandshop.domain.entity.Product;
 import com.yourname.tomorrowlandshop.domain.entity.User;
+import com.yourname.tomorrowlandshop.domain.enums.OrderStatus;
 import com.yourname.tomorrowlandshop.domain.enums.PaymentMethod;
 import com.yourname.tomorrowlandshop.domain.exception.InsufficientStockException;
 import com.yourname.tomorrowlandshop.domain.exception.OrderConflictException;
@@ -46,7 +47,12 @@ class OrderServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(User.builder().id(1L).build()));
         when(orderRepository.save(any(Order.class))).thenAnswer(i -> i.getArgument(0));
 
-        orderService.placeOrder(1L, cart, PaymentMethod.PAYPAL);
+        Order result = orderService.placeOrder(1L, cart, PaymentMethod.PAYPAL);
+
+        assertThat(result).isNotNull();
+        assertThat(result.getPaymentMethod()).isEqualTo(PaymentMethod.PAYPAL);
+        assertThat(result.getStatus()).isEqualTo(OrderStatus.PENDING);
+        assertThat(product.getStock()).isEqualTo(4);
     }
 
     @Test

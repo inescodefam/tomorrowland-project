@@ -53,7 +53,7 @@ public class LoginAudit {
     }
 
     public LocalDateTime getLoginAt() {
-        return createdAt;
+        return getCreatedAt();
     }
 
     public static final class Builder {
@@ -80,8 +80,7 @@ public class LoginAudit {
         }
 
         public Builder createdAt(LocalDateTime value) {
-            target.createdAt = value;
-            return this;
+            return loginAt(value);
         }
 
         public Builder success(boolean value) {
