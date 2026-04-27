@@ -28,20 +28,20 @@
 
 .tml-table .form-control,
 .tml-table .form-select {
-    background: rgba(255, 255, 255, .1);
+    background: rgba(20, 10, 50, 0.65);
     border: 1px solid rgba(255, 255, 255, .22);
     color: #fff;
 }
 
 .tml-table .form-control:focus,
 .tml-table .form-select:focus {
-    background: rgba(255, 255, 255, .14);
+    background: rgba(20, 10, 50, 0.75);
     border-color: #d38dff;
     box-shadow: 0 0 0 .2rem rgba(211, 141, 255, .22);
     color: #fff;
 }
 
 .tml-status-badge {
-    background: linear-gradient(135deg, rgba(125, 44, 255, .92), rgba(211, 66, 141, .92)) !important;
+    background: linear-gradient(135deg, #7d2cff, #c43588) !important;
     color: #fff;
 }

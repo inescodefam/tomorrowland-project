@@ -26,45 +26,55 @@ public class PayPalServiceImpl implements PayPalService {
     }
 
     @Override
-    public String createOrder(BigDecimal amount) throws Exception {
-        BigDecimal safeAmount = amount != null ? amount : BigDecimal.ZERO;
-        OrderRequest orderRequest = new OrderRequest.Builder(
-                CheckoutPaymentIntent.CAPTURE,
-                List.of(
-                        new PurchaseUnitRequest.Builder(
-                                new AmountWithBreakdown.Builder(
-                                        "EUR",
-                                        safeAmount.setScale(2, RoundingMode.HALF_UP).toPlainString()
-                                ).build()
-                        ).build()
-                )
-        ).build();
+    public String createOrder(BigDecimal amount) throws PaymentFailedException {
+        try {
+            BigDecimal safeAmount = amount != null ? amount : BigDecimal.ZERO;
+            OrderRequest orderRequest = new OrderRequest.Builder(
+                    CheckoutPaymentIntent.CAPTURE,
+                    List.of(
+                            new PurchaseUnitRequest.Builder(
+                                    new AmountWithBreakdown.Builder(
+                                            "EUR",
+                                            safeAmount.setScale(2, RoundingMode.HALF_UP).toPlainString()
+                                    ).build()
+                            ).build()
+                    )
+            ).build();
 
-        Order order = ordersController
-                .ordersCreate(
-                        new OrdersCreateInput.Builder()
-                                .body(orderRequest)
-                                .build()
-                )
-                .getResult();
+            Order order = ordersController
+                    .ordersCreate(
+                            new OrdersCreateInput.Builder()
+                                    .body(orderRequest)
+                                    .build()
+                    )
+                    .getResult();
 
-        return order.getId();
+            return order.getId();
+        } catch (Exception e) {
+            throw new PaymentFailedException("Failed to create PayPal order: " + e.getMessage());
+        }
     }
 
     @Override
-    public String captureOrder(String paypalOrderId) throws Exception {
-        Order order = ordersController
-                .ordersCapture(
-                        new OrdersCaptureInput.Builder()
-                                .id(paypalOrderId)
-                                .build()
-                )
-                .getResult();
+    public String captureOrder(String paypalOrderId) throws PaymentFailedException {
+        try {
+            Order order = ordersController
+                    .ordersCapture(
+                            new OrdersCaptureInput.Builder()
+                                    .id(paypalOrderId)
+                                    .build()
+                    )
+                    .getResult();
 
-        String status = order.getStatus().toString();
-        if (!"COMPLETED".equals(status)) {
-            throw new PaymentFailedException("PayPal capture failed: " + status);
+            String status = order.getStatus().toString();
+            if (!"COMPLETED".equals(status)) {
+                throw new PaymentFailedException("PayPal capture failed: " + status);
+            }
+            return status;
+        } catch (PaymentFailedException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new PaymentFailedException("Failed to capture PayPal order: " + e.getMessage());
         }
-        return status;
     }
 }

@@ -44,13 +44,13 @@
 }
 
 .auth-card .form-control {
-    background: rgba(255, 255, 255, .08);
+    background: rgba(20, 10, 50, 0.65);
     border: 1px solid rgba(255, 255, 255, .25);
     color: #ffffff;
 }
 
 .auth-card .form-control:focus {
-    background: rgba(255, 255, 255, .12);
+    background: rgba(20, 10, 50, 0.75);
     border-color: #d38dff;
     box-shadow: 0 0 0 .2rem rgba(211, 141, 255, .26);
     color: #ffffff;
