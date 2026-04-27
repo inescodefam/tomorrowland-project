@@ -2,6 +2,7 @@ package com.yourname.tomorrowlandshop.controller;
 
 import com.yourname.tomorrowlandshop.domain.enums.PaymentStatus;
 import com.yourname.tomorrowlandshop.service.PayPalService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,13 +13,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders/paypal")
+@RequiredArgsConstructor
 public class OrderRestController {
 
     private final PayPalService payPalService;
-
-    public OrderRestController(PayPalService payPalService) {
-        this.payPalService = payPalService;
-    }
 
     @PostMapping("/create")
     public ResponseEntity<Map<String, String>> create(@RequestBody Map<String, Long> payload) {

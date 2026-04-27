@@ -3,6 +3,7 @@ package com.yourname.tomorrowlandshop.controller;
 import com.yourname.tomorrowlandshop.domain.exception.InsufficientStockException;
 import com.yourname.tomorrowlandshop.service.CartService;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/cart")
+@RequiredArgsConstructor
 public class CartController {
 
     private static final String REDIRECT_CART = "redirect:/cart";
@@ -22,10 +24,6 @@ public class CartController {
     private static final String PAYPAL_MESSAGE = "paypalMessage";
 
     private final CartService cartService;
-
-    public CartController(CartService cartService) {
-        this.cartService = cartService;
-    }
 
     @PostMapping("/add")
     public String add(@RequestParam Long productId,

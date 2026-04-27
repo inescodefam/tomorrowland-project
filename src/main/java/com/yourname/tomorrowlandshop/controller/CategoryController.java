@@ -2,6 +2,7 @@ package com.yourname.tomorrowlandshop.controller;
 
 import com.yourname.tomorrowlandshop.service.CategoryService;
 import com.yourname.tomorrowlandshop.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,15 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/categories")
+@RequiredArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
     private final ProductService productService;
-
-    public CategoryController(CategoryService categoryService, ProductService productService) {
-        this.categoryService = categoryService;
-        this.productService = productService;
-    }
 
     @GetMapping
     public String list(Model model) {

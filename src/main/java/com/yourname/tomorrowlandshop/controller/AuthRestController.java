@@ -5,6 +5,7 @@ import com.yourname.tomorrowlandshop.service.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -19,6 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthRestController {
 
     private static final String ACCESS_COOKIE  = "access_token";
@@ -33,17 +35,8 @@ public class AuthRestController {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final boolean secureCookie;
-
-    public AuthRestController(JwtService jwtService,
-                              UserRepository userRepository,
-                              PasswordEncoder passwordEncoder,
-                              @Value("${app.cookie.secure:true}") boolean secureCookie) {
-        this.jwtService      = jwtService;
-        this.userRepository  = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.secureCookie    = secureCookie;
-    }
+    @Value("${app.cookie.secure:true}")
+    private boolean secureCookie;
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> payload,

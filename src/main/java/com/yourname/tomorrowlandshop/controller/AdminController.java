@@ -3,6 +3,7 @@ package com.yourname.tomorrowlandshop.controller;
 import com.yourname.tomorrowlandshop.dto.CategoryDto;
 import com.yourname.tomorrowlandshop.dto.ProductDto;
 import com.yourname.tomorrowlandshop.service.AdminService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping("/admin")
+@RequiredArgsConstructor
 public class AdminController {
 
     private static final String CATEGORIES_MODEL_ATTRIBUTE = "categories";
@@ -24,10 +26,6 @@ public class AdminController {
     private static final String REDIRECT_ADMIN_CATEGORIES = "redirect:/admin/categories";
 
     private final AdminService adminService;
-
-    public AdminController(AdminService adminService) {
-        this.adminService = adminService;
-    }
 
     @GetMapping("/products")
     public String listProducts(Model model) {

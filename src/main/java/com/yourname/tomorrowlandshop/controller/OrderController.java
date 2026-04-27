@@ -11,6 +11,7 @@ import com.yourname.tomorrowlandshop.service.CartService;
 import com.yourname.tomorrowlandshop.service.OrderService;
 import com.yourname.tomorrowlandshop.service.PayPalService;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,6 +31,7 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/orders")
+@RequiredArgsConstructor
 public class OrderController {
 
     private static final String REDIRECT_CART = "redirect:/cart";
@@ -46,14 +48,6 @@ public class OrderController {
 
     @Value("${paypal.client-id:}")
     private String paypalClientId;
-
-    public OrderController(OrderService orderService, CartService cartService, PayPalService payPalService,
-                           UserRepository userRepository) {
-        this.orderService = orderService;
-        this.cartService = cartService;
-        this.payPalService = payPalService;
-        this.userRepository = userRepository;
-    }
 
     @GetMapping("/checkout")
     public String checkoutForm(HttpSession session, Model model, RedirectAttributes redirectAttributes) {
