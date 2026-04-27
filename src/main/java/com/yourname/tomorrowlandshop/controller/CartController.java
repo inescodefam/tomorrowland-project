@@ -18,8 +18,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CartController {
 
     private static final String REDIRECT_CART = "redirect:/cart";
-    private static final String CHECKOUT_ERROR = CHECKOUT_ERROR;
-    private static final String PAYPAL_MESSAGE = PAYPAL_MESSAGE;
+    private static final String CHECKOUT_ERROR = "checkoutError";
+    private static final String PAYPAL_MESSAGE = "paypalMessage";
 
     private final CartService cartService;
 
