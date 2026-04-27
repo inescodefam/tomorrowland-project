@@ -21,6 +21,19 @@
     background: linear-gradient(140deg, rgba(131, 58, 180, .24), rgba(253, 29, 29, .14), rgba(252, 176, 69, .14));
 }
 
+.page-shell .form-control {
+    background: rgba(20, 10, 50, 0.65);
+    border: 1px solid rgba(255, 255, 255, .22);
+    color: #fff;
+}
+
+.page-shell .form-control:focus {
+    background: rgba(20, 10, 50, 0.75);
+    border-color: #d38dff;
+    box-shadow: 0 0 0 .2rem rgba(211, 141, 255, .22);
+    color: #fff;
+}
+
 .btn-primary,
 .btn-success {
     background: linear-gradient(135deg, #7d2cff, #d3428d);
